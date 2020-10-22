@@ -11,8 +11,11 @@ public class Account {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
+  
   private String holder;
+  
   private String number;
+  
   private String agency;
 
   public Integer getId() {

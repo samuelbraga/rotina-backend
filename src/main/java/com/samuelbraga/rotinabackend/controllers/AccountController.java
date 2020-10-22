@@ -39,19 +39,17 @@ public class AccountController {
 
   @GetMapping
   @RequestMapping("/search")
-  public Optional<Account> search(@RequestParam Integer id) {
-    Optional<Account> account = accountRepository.findById(id);
+  public Account search(@RequestParam Integer id) {
+    Account account = accountRepository.findById(id).get();
     return account;
   }
 
   @GetMapping
   @RequestMapping("/update/holder")
-  public Optional<Account> updateHolder(@RequestParam Integer id) {
-    Optional<Account> account = accountRepository.findById(id);
-    account.ifPresent(acc -> {
-      acc.setHolder("Mumuzinho");
-      accountRepository.save(acc);
-    });
+  public Account updateHolder(@RequestParam Integer id) {
+    Account account = accountRepository.findById(id).get();
+    account.setHolder("Mumuzinho");
+    accountRepository.save(account);
     
     return account;
   }
