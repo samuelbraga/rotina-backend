@@ -32,7 +32,7 @@ public class BodyValidationExceptionHandler {
     List<FieldError> fieldErrors =  methodArgumentNotValidException.getBindingResult().getFieldErrors();
     
     fieldErrors.forEach(error -> {
-      String message = messageSource.getMessage(error, LocaleContextHolder.getLocale());
+      String message = this.messageSource.getMessage(error, LocaleContextHolder.getLocale());
       ErrorBodyValidationDTO errorBodyValidation = new ErrorBodyValidationDTO(error.getField(), message);
       errorBodyValidationDTOS.add(errorBodyValidation);
     });

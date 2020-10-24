@@ -8,19 +8,12 @@ import java.util.UUID;
 public class UserDTO {
 
   private UUID id;
-
   private String email;
-
   private String name;
-
   private String last_name;
-
   private String phone;
-
   private String password;
-
   private TypeUser type;
-
   private Company company;
 
   public UUID getId() {

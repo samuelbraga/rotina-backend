@@ -1,6 +1,7 @@
 package com.samuelbraga.rotinabackend.Services.Companies;
 
 import com.samuelbraga.rotinabackend.DTO.Companies.CreateCompanyDTO;
+import com.samuelbraga.rotinabackend.Exception.BaseException;
 import com.samuelbraga.rotinabackend.Models.Company;
 import com.samuelbraga.rotinabackend.Repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ public class CreateCompanyService {
 
 
   public Company execute(CreateCompanyDTO createCompanyDTO) {
+    Company companyExists = this.companyRepository.findByName(createCompanyDTO.getName()).get();
+    
+    if(companyExists != null) {
+      throw new BaseException("Company already exists");
+    }
+    
     Company company = new Company(createCompanyDTO.getName());
     this.companyRepository.save(company);
     return company;

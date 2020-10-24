@@ -1,6 +1,5 @@
 package com.samuelbraga.rotinabackend.DTO.Users;
 
-import com.samuelbraga.rotinabackend.Enums.TypeUser;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
