@@ -13,7 +13,6 @@ public class BaseExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler({BaseException.class})
   public BaseExceptionDTO handle(BaseException baseException) {
-    BaseExceptionDTO baseExceptionDTO = new BaseExceptionDTO(baseException.getMessage());
-    return baseExceptionDTO;
+    return new BaseExceptionDTO(baseException.getMessage());
   }
 }

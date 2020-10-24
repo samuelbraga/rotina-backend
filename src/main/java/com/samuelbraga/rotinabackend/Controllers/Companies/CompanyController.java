@@ -29,7 +29,6 @@ public class CompanyController {
   @PostMapping
   public CompanyDTO create(@RequestBody @Valid CreateCompanyDTO createCompanyDTO) {
     Company company = this.createCompanyService.execute(createCompanyDTO);
-    CompanyDTO companyDTO = this.modelMapper.map(company, CompanyDTO.class);
-    return companyDTO;
+    return this.modelMapper.map(company, CompanyDTO.class);
   }
 }

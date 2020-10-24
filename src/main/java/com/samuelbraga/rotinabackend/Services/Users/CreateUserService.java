@@ -1,12 +1,15 @@
 package com.samuelbraga.rotinabackend.Services.Users;
 
 import com.samuelbraga.rotinabackend.DTO.Users.CreateUserDTO;
+import com.samuelbraga.rotinabackend.Exception.BaseException;
 import com.samuelbraga.rotinabackend.Models.Company;
 import com.samuelbraga.rotinabackend.Models.User;
 import com.samuelbraga.rotinabackend.Repository.CompanyRepository;
 import com.samuelbraga.rotinabackend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CreateUserService {
@@ -24,8 +27,13 @@ public class CreateUserService {
   public User execute(CreateUserDTO createUserDTO) {
     User user = new User(createUserDTO);
     
-    Company company = this.companyRepository.findById(createUserDTO.getCompany_id()).get();
-    user.setCompany(company);
+    Optional<Company> company = this.companyRepository.findById(createUserDTO.getCompany_id());
+    
+    if(!(company.isPresent())) {
+      throw new BaseException("Company does not exists");
+    }
+    
+    user.setCompany(company.get());
     
     this.userRepository.save(user);
     return user;

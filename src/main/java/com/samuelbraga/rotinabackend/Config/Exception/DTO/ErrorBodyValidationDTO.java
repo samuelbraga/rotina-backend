@@ -2,8 +2,8 @@ package com.samuelbraga.rotinabackend.Config.Exception.DTO;
 
 public class ErrorBodyValidationDTO {
   
-  private String field;
-  private String message;
+  private final String field;
+  private final String message;
 
   public ErrorBodyValidationDTO(String field, String message) {
     this.field = field;

@@ -29,7 +29,6 @@ public class UserController {
   @PostMapping
   public UserDTO create(@RequestBody @Valid CreateUserDTO createUserDTO) {
     User user = this.createUserService.execute(createUserDTO);
-    UserDTO userDTO = this.modelMapper.map(user, UserDTO.class);
-    return userDTO;
+    return this.modelMapper.map(user, UserDTO.class);
   }
 }

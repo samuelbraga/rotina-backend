@@ -1,7 +1,5 @@
 package com.samuelbraga.rotinabackend.Enums;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import java.util.Arrays;
 
 public enum TypeUser {
@@ -9,9 +7,9 @@ public enum TypeUser {
   ADMIN("ADMIN"),
   SUPER_ADMIN("SUPER_ADMIN");
 
-  private String value;
+  private final String value;
 
-  private TypeUser(String value) {
+  TypeUser(String value) {
     this.value = value;
   }
 

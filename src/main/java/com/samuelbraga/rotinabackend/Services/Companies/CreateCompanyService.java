@@ -7,6 +7,8 @@ import com.samuelbraga.rotinabackend.Repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CreateCompanyService {
   
@@ -19,9 +21,9 @@ public class CreateCompanyService {
 
 
   public Company execute(CreateCompanyDTO createCompanyDTO) {
-    Company companyExists = this.companyRepository.findByName(createCompanyDTO.getName()).get();
+    Optional<Company> companyExists = this.companyRepository.findByName(createCompanyDTO.getName());
     
-    if(companyExists != null) {
+    if(companyExists.isPresent()) {
       throw new BaseException("Company already exists");
     }
     
