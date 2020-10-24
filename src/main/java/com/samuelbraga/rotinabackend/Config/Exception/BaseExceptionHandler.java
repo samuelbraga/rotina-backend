@@ -1,7 +1,7 @@
 package com.samuelbraga.rotinabackend.Config.Exception;
 
 import com.samuelbraga.rotinabackend.Config.Exception.DTO.BaseExceptionDTO;
-import com.samuelbraga.rotinabackend.Exception.BaseException;
+import com.samuelbraga.rotinabackend.Exceptions.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
