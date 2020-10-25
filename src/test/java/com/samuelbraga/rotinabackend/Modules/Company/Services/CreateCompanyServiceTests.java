@@ -40,7 +40,7 @@ public class CreateCompanyServiceTests {
   }
 
   @Test
-  public void itShouldNotBeCreatedCompanyWithCopanyNameExists() {
+  public void itShouldNotBeCreatedCompanyWithCompanyNameExists() {
     Company company = new Company("foo");
     CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
 
@@ -48,6 +48,5 @@ public class CreateCompanyServiceTests {
     
     Assert.assertThrows(BaseException.class, () -> this.createCompanyService.execute(createCompanyDTO));
     verify(this.companyRepository, never()).save(any(Company.class));
-  }
-  
+  }  
 }

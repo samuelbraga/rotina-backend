@@ -29,7 +29,26 @@ public class CreateUserDTO {
 
   @NotNull
   private UUID company_id;
-  
+
+  public CreateUserDTO() {
+  }
+
+  public CreateUserDTO(@NotNull @NotEmpty @Email String email,
+                       @NotNull @NotEmpty String name,
+                       @NotNull @NotEmpty String last_name,
+                       @NotNull @NotEmpty String phone,
+                       @NotNull @NotEmpty @Length String password,
+                       @NotNull @NotEmpty String type,
+                       @NotNull UUID company_id) {
+    this.email = email;
+    this.name = name;
+    this.last_name = last_name;
+    this.phone = phone;
+    this.password = password;
+    this.type = type;
+    this.company_id = company_id;
+  }
+
   public String getEmail() {
     return email;
   }
