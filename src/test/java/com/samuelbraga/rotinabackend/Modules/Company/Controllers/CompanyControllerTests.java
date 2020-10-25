@@ -1,7 +1,6 @@
-package com.samuelbraga.rotinabackend.Modules.Company.Controller;
+package com.samuelbraga.rotinabackend.Modules.Company.Controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.samuelbraga.rotinabackend.Modules.Company.Controllers.CompanyController;
 import com.samuelbraga.rotinabackend.Modules.Company.DTOS.CreateCompanyDTO;
 import com.samuelbraga.rotinabackend.Modules.Company.IService.ICreateCompanyService;
 import org.junit.jupiter.api.Test;
