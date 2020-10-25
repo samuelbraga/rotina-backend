@@ -1,6 +1,7 @@
 package com.samuelbraga.rotinabackend.Modules.Company.Services;
 
 import com.samuelbraga.rotinabackend.Exceptions.BaseException;
+import com.samuelbraga.rotinabackend.Modules.Company.DTOS.CompanyDTO;
 import com.samuelbraga.rotinabackend.Modules.Company.DTOS.CreateCompanyDTO;
 import com.samuelbraga.rotinabackend.Modules.Company.Models.Company;
 import com.samuelbraga.rotinabackend.Modules.Company.Repositories.CompanyRepository;
@@ -8,16 +9,15 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -26,17 +26,25 @@ public class CreateCompanyServiceTests {
   @Mock
   private CompanyRepository companyRepository;
 
+  @Mock
+  private ModelMapper modelMapper;
+
   @InjectMocks
   private CreateCompanyService createCompanyService;
   
   @Test
   public void itShouldBeCreatedNewCompany() {
     CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
+    CompanyDTO companyDTO = new CompanyDTO();
     
-    Company company = this.createCompanyService.execute(createCompanyDTO);
+    companyDTO.setName("foo");
 
-    Assert.assertNotNull(company);
-    Assert.assertEquals(company.getName(), "foo");
+    when(modelMapper.map(any(), any())).thenReturn(companyDTO);
+    
+    CompanyDTO result = this.createCompanyService.execute(createCompanyDTO);
+
+    Assert.assertNotNull(result);
+    Assert.assertEquals(result.getName(), "foo");
   }
 
   @Test

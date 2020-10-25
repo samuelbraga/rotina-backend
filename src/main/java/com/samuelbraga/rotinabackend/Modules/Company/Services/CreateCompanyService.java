@@ -1,10 +1,12 @@
 package com.samuelbraga.rotinabackend.Modules.Company.Services;
 
+import com.samuelbraga.rotinabackend.Modules.Company.DTOS.CompanyDTO;
 import com.samuelbraga.rotinabackend.Modules.Company.DTOS.CreateCompanyDTO;
 import com.samuelbraga.rotinabackend.Exceptions.BaseException;
 import com.samuelbraga.rotinabackend.Modules.Company.IService.ICreateCompanyService;
 import com.samuelbraga.rotinabackend.Modules.Company.Models.Company;
 import com.samuelbraga.rotinabackend.Modules.Company.Repositories.CompanyRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +16,16 @@ import java.util.Optional;
 public class CreateCompanyService implements ICreateCompanyService {
   
   private final CompanyRepository companyRepository;
+  private final ModelMapper modelMapper;
   
   @Autowired
-  public CreateCompanyService(CompanyRepository companyRepository) {
+  public CreateCompanyService(CompanyRepository companyRepository, ModelMapper modelMapper) {
     this.companyRepository = companyRepository;
+    this.modelMapper = modelMapper;
   }
 
   @Override
-  public Company execute(CreateCompanyDTO createCompanyDTO) {
+  public CompanyDTO execute(CreateCompanyDTO createCompanyDTO) {
     Optional<Company> companyExists = this.companyRepository.findByName(createCompanyDTO.getName());
     
     if(companyExists.isPresent()) {
@@ -30,6 +34,7 @@ public class CreateCompanyService implements ICreateCompanyService {
     
     Company company = new Company(createCompanyDTO.getName());
     this.companyRepository.save(company);
-    return company;
+
+    return this.modelMapper.map(company, CompanyDTO.class);
   }
 }
