@@ -17,6 +17,7 @@ public class User {
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
 
+  @Column(unique = true)
   private String email;
   
   private String name;

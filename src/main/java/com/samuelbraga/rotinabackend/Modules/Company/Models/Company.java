@@ -13,7 +13,8 @@ public class Company {
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
   @Column(columnDefinition = "BINARY(16)")
   private UUID id;
-  
+
+  @Column(unique = true)
   private String name;
   
   public Company() {}

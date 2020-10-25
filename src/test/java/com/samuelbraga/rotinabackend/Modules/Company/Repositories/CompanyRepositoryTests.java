@@ -6,20 +6,40 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @SpringBootTest
-@AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @ActiveProfiles("test")
 public class CompanyRepositoryTests {
   
-  private final CompanyRepository companyRepository;
+  @MockBean
+  private CompanyRepository companyRepository;
+  
+  @Test
+  public void itShouldBeLoadCompanyFromItsId() {
+    Company company = new Company("foo");
+    company.setId(UUID.randomUUID());
+    this.companyRepository.save(company);
 
-  @Autowired
-  public CompanyRepositoryTests(CompanyRepository companyRepository) {
-    this.companyRepository = companyRepository;
+    Optional<Company> companyResult = this.companyRepository.findById(company.getId());
+
+    if(!companyResult.isPresent()) return;
+
+    Assert.assertNotNull(companyResult.get());
+    Assert.assertEquals(companyResult.get().getName(), "foo");
+  }
+
+  @Test
+  public void itShouldBeReturnedNullWhenPassIdFromNonExistCompany() {
+    boolean notPresent = this.companyRepository.findById(UUID.randomUUID()).isPresent();
+    Assert.assertFalse(notPresent);
   }
 
   @Test
@@ -36,7 +56,7 @@ public class CompanyRepositoryTests {
   }
 
   @Test
-  public void itShouldBeReturnedNullWhenPassNonExistCompany() {
+  public void itShouldBeReturnedNullWhenPassNameFromNonExistCompany() {
     String nameCompany = "foo";
     boolean notPresent = this.companyRepository.findByName(nameCompany).isPresent();
     Assert.assertFalse(notPresent);
