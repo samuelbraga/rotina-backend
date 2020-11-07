@@ -12,7 +12,6 @@ public class UserDTO {
   private String name;
   private String lastName;
   private String phone;
-  private String password;
   private TypeUser type;
   private Company company;
 
@@ -55,15 +54,7 @@ public class UserDTO {
   public void setPhone(String phone) {
     this.phone = phone;
   }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
+  
   public TypeUser getType() {
     return type;
   }

@@ -19,6 +19,8 @@ server:
     context-path: "/api"
 
 management:
+  server:
+    port: 8081
   endpoints:
     enabled-by-default: false
   endpoint:
@@ -29,11 +31,9 @@ management:
         liveness:
           include: "livenessState"
         readiness:
-          include: "readinessState"
+          include: "readinessState, db, diskSpace"
   health:
     livenessstate:
       enabled: true
     readinessstate:
       enabled: true
-  server:
-    port: 8081

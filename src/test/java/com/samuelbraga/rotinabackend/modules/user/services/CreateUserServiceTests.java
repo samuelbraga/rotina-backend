@@ -1,5 +1,6 @@
 package com.samuelbraga.rotinabackend.modules.user.services;
 
+import com.samuelbraga.rotinabackend.config.Hash.Hash;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
 import com.samuelbraga.rotinabackend.modules.company.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.modules.user.dtos.CreateUserDTO;
@@ -34,6 +35,9 @@ class CreateUserServiceTests {
 
   @Mock
   private ModelMapper modelMapper;
+
+  @Mock
+  private Hash hash;
   
   @InjectMocks
   private CreateUserService createUserService;
@@ -57,7 +61,6 @@ class CreateUserServiceTests {
     userDTO.setName("Foo");
     userDTO.setLastName("Bar");
     userDTO.setPhone("999999999");
-    userDTO.setPassword("123456");
     userDTO.setType(TypeUser.DEFAULT);
 
     given(this.companyRepository.findById(uuid)).willReturn(Optional.of(company));
