@@ -1,16 +1,20 @@
 package com.samuelbraga.rotinabackend.config.Hash;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class Hash {
-
-  public String hash(String password) {
-    return BCrypt.hashpw(password, BCrypt.gensalt(8));
+  
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  
+  @Autowired
+  public Hash() {
+    this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
   }
 
-  public boolean verifyHash(String password, String hash) {
-    return BCrypt.checkpw(password, hash);
+  public String hash(String password) {
+    return bCryptPasswordEncoder.encode(password);
   }
 }

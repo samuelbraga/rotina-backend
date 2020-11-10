@@ -14,7 +14,7 @@ public class RotinaBackendApplication {
   private static final Logger log = LoggerFactory.getLogger(RotinaBackendApplication.class);
 
   private final Environment env;
-
+  
   public RotinaBackendApplication(Environment env) {
     this.env = env;
   }
@@ -29,14 +29,13 @@ public class RotinaBackendApplication {
     log.info("\n----------------------------------------------------------\n\t" +
         "Application '{}' is running! Access URLs:\n\t" +
         "Local: \t\t{}://localhost:{}\n\t" +
-        "External: \t{}://{}:{}\n\t" +
-        "Profile(s): \t{}\n----------------------------------------------------------",
+        "External: \t{}://{}:{}\n" +
+        "----------------------------------------------------------",
       env.getProperty("spring.application.name"),
       protocol,
       env.getProperty("server.port"),
       protocol,
       InetAddress.getLocalHost().getHostAddress(),
-      env.getProperty("server.port"),
-      env.getActiveProfiles());
+      env.getProperty("server.port"));
 	}
 }

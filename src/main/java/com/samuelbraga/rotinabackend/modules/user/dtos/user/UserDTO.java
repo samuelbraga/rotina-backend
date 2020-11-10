@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.modules.user.dtos;
+package com.samuelbraga.rotinabackend.modules.user.dtos.user;
 
 import com.samuelbraga.rotinabackend.modules.user.enums.TypeUser;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
@@ -12,7 +12,6 @@ public class UserDTO {
   private String name;
   private String lastName;
   private String phone;
-  private TypeUser type;
   private Company company;
 
   public UUID getId() {
@@ -55,14 +54,6 @@ public class UserDTO {
     this.phone = phone;
   }
   
-  public TypeUser getType() {
-    return type;
-  }
-
-  public void setType(TypeUser type) {
-    this.type = type;
-  }
-
   public Company getCompany() {
     return company;
   }

@@ -1,15 +1,19 @@
 package com.samuelbraga.rotinabackend.modules.user.models;
 
-import com.samuelbraga.rotinabackend.modules.user.dtos.CreateUserDTO;
-import com.samuelbraga.rotinabackend.modules.user.enums.TypeUser;
+import com.samuelbraga.rotinabackend.modules.user.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class User implements UserDetails {
   
   @Id
   @GeneratedValue(generator = "uuid2")
@@ -28,11 +32,11 @@ public class User {
   
   private String password;
   
-  @Enumerated(EnumType.STRING)
-  private TypeUser type;
-  
   @ManyToOne
   private Company company;
+  
+  @ManyToMany(fetch = FetchType.EAGER)
+  private List<Profile> profiles = new ArrayList<>();
   
   public User() {}
 
@@ -41,7 +45,6 @@ public class User {
     this.name = createUserDTO.getName();
     this.lastName = createUserDTO.getLastName();
     this.phone = createUserDTO.getPhone();
-    this.type = TypeUser.valueOf(createUserDTO.getType());
     this.password = createUserDTO.getPassword();
   }
 
@@ -84,28 +87,58 @@ public class User {
   public void setPhone(String phone) {
     this.phone = phone;
   }
-
-  public String getPassword() {
-    return password;
-  }
-
+  
   public void setPassword(String password) {
     this.password = password;
   }
-
-  public TypeUser getType() {
-    return type;
-  }
-
-  public void setType(TypeUser type) {
-    this.type = type;
-  }
-
+  
   public Company getCompany() {
     return company;
   }
 
   public void setCompany(Company company) {
     this.company = company;
+  }
+
+  public List<Profile> getProfiles() {
+    return profiles;
+  }
+
+  public void setProfiles(List<Profile> profiles) {
+    this.profiles = profiles;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return profiles;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  @Override
+  public String getUsername() {
+    return email;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 }

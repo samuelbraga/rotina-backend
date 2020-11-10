@@ -1,11 +1,11 @@
-package com.samuelbraga.rotinabackend.modules.user.services;
+package com.samuelbraga.rotinabackend.modules.user.services.user;
 
 import com.samuelbraga.rotinabackend.config.Hash.Hash;
-import com.samuelbraga.rotinabackend.modules.user.dtos.CreateUserDTO;
+import com.samuelbraga.rotinabackend.modules.user.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
-import com.samuelbraga.rotinabackend.modules.user.dtos.UserDTO;
-import com.samuelbraga.rotinabackend.modules.user.iservice.ICreateUserService;
+import com.samuelbraga.rotinabackend.modules.user.dtos.user.UserDTO;
+import com.samuelbraga.rotinabackend.modules.user.iservice.user.ICreateUserService;
 import com.samuelbraga.rotinabackend.modules.user.models.User;
 import com.samuelbraga.rotinabackend.modules.company.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.modules.user.repositories.UserRepository;

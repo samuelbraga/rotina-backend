@@ -1,8 +1,8 @@
-package com.samuelbraga.rotinabackend.modules.user.controllers;
+package com.samuelbraga.rotinabackend.modules.user.controllers.user;
 
-import com.samuelbraga.rotinabackend.modules.user.dtos.CreateUserDTO;
-import com.samuelbraga.rotinabackend.modules.user.dtos.UserDTO;
-import com.samuelbraga.rotinabackend.modules.user.iservice.ICreateUserService;
+import com.samuelbraga.rotinabackend.modules.user.dtos.user.CreateUserDTO;
+import com.samuelbraga.rotinabackend.modules.user.dtos.user.UserDTO;
+import com.samuelbraga.rotinabackend.modules.user.iservice.user.ICreateUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

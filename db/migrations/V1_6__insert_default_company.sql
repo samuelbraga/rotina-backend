@@ -1,0 +1,1 @@
+INSERT INTO company (id, name) VALUES (unhex(replace(uuid(),'-','')), "Fantini S.A.");

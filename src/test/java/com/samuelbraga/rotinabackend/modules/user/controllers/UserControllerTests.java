@@ -1,8 +1,9 @@
 package com.samuelbraga.rotinabackend.modules.user.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.samuelbraga.rotinabackend.modules.user.dtos.CreateUserDTO;
-import com.samuelbraga.rotinabackend.modules.user.iservice.ICreateUserService;
+import com.samuelbraga.rotinabackend.modules.user.controllers.user.UserController;
+import com.samuelbraga.rotinabackend.modules.user.dtos.user.CreateUserDTO;
+import com.samuelbraga.rotinabackend.modules.user.iservice.user.ICreateUserService;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,6 @@ class UserControllerTests {
       "Bar",
       "99999999",
       "12345678",
-      "DEFAULT",
       UUID.randomUUID());
 
     this.mockMvc.perform(post("/users")

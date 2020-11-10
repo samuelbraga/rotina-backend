@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: "Rotina Backend"
   datasource:
     driver-class-name: "com.mysql.cj.jdbc.Driver"
     url: "jdbc:mysql://localhost:3306/rotina"
@@ -17,6 +19,10 @@ server:
   port: 8080
   servlet:
     context-path: "/api"
+    
+jwt:
+  secret: "173763a94abd323bb04890e59f1611be"
+  expiration: "86400000"
 
 management:
   server:

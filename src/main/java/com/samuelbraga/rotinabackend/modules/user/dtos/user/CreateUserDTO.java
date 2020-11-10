@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.modules.user.dtos;
+package com.samuelbraga.rotinabackend.modules.user.dtos.user;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -23,10 +23,7 @@ public class CreateUserDTO {
 
   @NotNull @NotEmpty @Length
   private String password;
-
-  @NotNull @NotEmpty
-  private String type;
-
+  
   @NotNull
   private UUID companyId;
 
@@ -38,14 +35,12 @@ public class CreateUserDTO {
                        @NotNull @NotEmpty String lastName,
                        @NotNull @NotEmpty String phone,
                        @NotNull @NotEmpty @Length String password,
-                       @NotNull @NotEmpty String type,
-                       @NotNull UUID companyId) {
+                       @NotNull @NotEmpty UUID companyId) {
     this.email = email;
     this.name = name;
     this.lastName = lastName;
     this.phone = phone;
     this.password = password;
-    this.type = type;
     this.companyId = companyId;
   }
 
@@ -88,15 +83,7 @@ public class CreateUserDTO {
   public void setPassword(String password) {
     this.password = password;
   }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
+  
   public UUID getCompanyId() {
     return companyId;
   }
