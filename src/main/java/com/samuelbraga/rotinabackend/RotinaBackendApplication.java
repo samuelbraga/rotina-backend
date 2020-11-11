@@ -13,10 +13,7 @@ import java.net.UnknownHostException;
 public class RotinaBackendApplication {
   private static final Logger log = LoggerFactory.getLogger(RotinaBackendApplication.class);
 
-  private final Environment env;
-  
   public RotinaBackendApplication(Environment env) {
-    this.env = env;
   }
 
 	public static void main(String[] args) throws UnknownHostException {

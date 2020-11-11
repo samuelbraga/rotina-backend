@@ -1,6 +1,6 @@
 package com.samuelbraga.rotinabackend.modules.user.services.user;
 
-import com.samuelbraga.rotinabackend.config.Hash.Hash;
+import com.samuelbraga.rotinabackend.config.hash.Hash;
 import com.samuelbraga.rotinabackend.modules.user.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CreateUserService implements ICreateUserService {
@@ -34,19 +35,14 @@ public class CreateUserService implements ICreateUserService {
 
   @Override
   public UserDTO execute(CreateUserDTO createUserDTO) {
+    this.verifyUserEmailExist(createUserDTO.getEmail());
+    Company company = this.findCompany(createUserDTO.getCompanyId());    
+    
     String hashedPassword = hashPassword(createUserDTO.getPassword());
     createUserDTO.setPassword(hashedPassword);
     
     User user = new User(createUserDTO);
-    
-    Optional<Company> company = this.companyRepository.findById(createUserDTO.getCompanyId());
-    
-    if(!(company.isPresent())) {
-      throw new BaseException("Company does not exists");
-    }
-    
-    user.setCompany(company.get());
-    
+    user.setCompany(company);
     this.userRepository.save(user);
 
     return this.modelMapper.map(user, UserDTO.class);
@@ -54,5 +50,23 @@ public class CreateUserService implements ICreateUserService {
   
   private String hashPassword(String password) {
     return this.hash.hash(password);
+  }
+  
+  private void verifyUserEmailExist(String email) {
+    Optional<User> user = this.userRepository.findByEmail(email);
+    
+    if(user.isPresent()) {
+      throw new BaseException("User email already exists");
+    }
+  }
+  
+  private Company findCompany(UUID companyId){
+    Optional<Company> company = this.companyRepository.findById(companyId);
+    
+    if(!(company.isPresent())) {
+      throw new BaseException("Company does not exists");
+    }
+    
+    return company.get();
   }
 }

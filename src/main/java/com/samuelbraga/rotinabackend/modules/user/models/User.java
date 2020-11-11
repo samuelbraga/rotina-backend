@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @Entity
 public class User implements UserDetails {
+  private static final long serialVersionUID = 1905122041950251207L;
   
   @Id
   @GeneratedValue(generator = "uuid2")

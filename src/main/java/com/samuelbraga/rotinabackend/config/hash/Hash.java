@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.config.Hash;
+package com.samuelbraga.rotinabackend.config.hash;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

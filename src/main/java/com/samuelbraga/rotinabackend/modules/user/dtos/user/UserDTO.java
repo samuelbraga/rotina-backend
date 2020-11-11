@@ -1,6 +1,5 @@
 package com.samuelbraga.rotinabackend.modules.user.dtos.user;
 
-import com.samuelbraga.rotinabackend.modules.user.enums.TypeUser;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
 
 import java.util.UUID;

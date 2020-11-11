@@ -3,10 +3,13 @@ package com.samuelbraga.rotinabackend.modules.company.models;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-public class Company {
+public class Company implements Serializable {
+
+  private static final long serialVersionUID = -2338626292552177485L;
   
   @Id
   @GeneratedValue(generator = "uuid2")

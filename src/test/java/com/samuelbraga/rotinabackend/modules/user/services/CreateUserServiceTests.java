@@ -1,11 +1,10 @@
 package com.samuelbraga.rotinabackend.modules.user.services;
 
-import com.samuelbraga.rotinabackend.config.Hash.Hash;
+import com.samuelbraga.rotinabackend.config.hash.Hash;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
 import com.samuelbraga.rotinabackend.modules.company.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.modules.user.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.modules.user.dtos.user.UserDTO;
-import com.samuelbraga.rotinabackend.modules.user.enums.TypeUser;
 import com.samuelbraga.rotinabackend.modules.user.repositories.UserRepository;
 import com.samuelbraga.rotinabackend.modules.user.services.user.CreateUserService;
 import org.junit.Assert;

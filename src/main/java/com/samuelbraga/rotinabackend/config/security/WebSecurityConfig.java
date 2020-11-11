@@ -44,12 +44,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-
       .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
       .antMatchers(HttpMethod.POST, "/session").permitAll()
-         
       .anyRequest().authenticated()
-      .and().csrf().disable()
+      
+      .and()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       
       .and()

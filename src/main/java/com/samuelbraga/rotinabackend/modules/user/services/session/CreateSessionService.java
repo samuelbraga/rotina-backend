@@ -17,9 +17,7 @@ public class CreateSessionService implements ICreateSessionService {
   
   private final AuthenticationManager authenticationManager;
   private final TokenAuthenticationService tokenAuthenticationService;
-  
-  private String  AUTH_TYPE = "Bearer";
-  
+
   @Autowired
   public CreateSessionService(AuthenticationManager authenticationManager, TokenAuthenticationService tokenAuthenticationService) {
     this.authenticationManager = authenticationManager;
@@ -35,9 +33,8 @@ public class CreateSessionService implements ICreateSessionService {
       Authentication authentication = authenticationManager.authenticate(userAuth);
 
       String token = tokenAuthenticationService.createToken(authentication);
-      TokenDTO tokenDTO = new TokenDTO(token, AUTH_TYPE);
 
-      return tokenDTO;
+      return new TokenDTO(token, "Bearer");
     } catch (AuthenticationException error) {
       throw new BaseException("User or password incorrect");
     }

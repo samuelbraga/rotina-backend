@@ -1,17 +1,11 @@
 package com.samuelbraga.rotinabackend.config.security;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.modules.user.models.User;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import io.jsonwebtoken.Jwts;
@@ -22,10 +16,10 @@ import org.springframework.stereotype.Service;
 public class TokenAuthenticationService {
   
   @Value("${jwt.secret}")
-  private String SECRET;
+  private String secret;
 
   @Value("${jwt.expiration}")
-  private String EXPIRATION;
+  private String expiration;
   
   public String createToken(Authentication authentication) {
     User user = (User) authentication.getPrincipal();
@@ -34,15 +28,15 @@ public class TokenAuthenticationService {
       .setIssuer("Rotina API")
       .setSubject(user.getId().toString())
       .setIssuedAt(new Date())
-      .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(EXPIRATION)))
-      .signWith(SignatureAlgorithm.HS256, SECRET)
+      .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(expiration)))
+      .signWith(SignatureAlgorithm.HS256, secret)
       .compact();
   }
   
   public boolean isTokenValid(String token) {
     try {
       Jwts.parser()
-        .setSigningKey(SECRET)
+        .setSigningKey(secret)
         .parseClaimsJws(token);
       
       return true;
@@ -53,7 +47,7 @@ public class TokenAuthenticationService {
   
   public UUID getUserId(String token) {
     Claims body = Jwts.parser()
-      .setSigningKey(SECRET)
+      .setSigningKey(secret)
       .parseClaimsJws(token)
       .getBody();
 
