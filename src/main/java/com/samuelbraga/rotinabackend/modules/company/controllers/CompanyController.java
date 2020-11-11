@@ -26,9 +26,6 @@ public class CompanyController {
   @ResponseStatus(HttpStatus.CREATED)
   public CompanyDTO create(HttpServletRequest request, @RequestBody @Valid CreateCompanyDTO createCompanyDTO) {
     UUID userId = (UUID) request.getSession().getAttribute("userId");
-    
-    System.out.println(userId);
-    
-    return this.createCompanyService.execute(createCompanyDTO);
+    return this.createCompanyService.execute(createCompanyDTO, userId);
   }
 }

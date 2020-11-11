@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -36,12 +37,13 @@ class CreateCompanyServiceTests {
   void itShouldBeCreatedNewCompany() {
     CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
     CompanyDTO companyDTO = new CompanyDTO();
+    UUID userId = UUID.randomUUID();
     
     companyDTO.setName("foo");
 
     when(modelMapper.map(any(), any())).thenReturn(companyDTO);
     
-    CompanyDTO result = this.createCompanyService.execute(createCompanyDTO);
+    CompanyDTO result = this.createCompanyService.execute(createCompanyDTO, userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals("foo", result.getName());
@@ -51,10 +53,11 @@ class CreateCompanyServiceTests {
   void itShouldNotBeCreatedCompanyWithCompanyNameExists() {
     Company company = new Company("foo");
     CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
+    UUID userId = UUID.randomUUID();
 
     given(this.companyRepository.findByName(createCompanyDTO.getName())).willReturn(Optional.of(company));
     
-    Assert.assertThrows(BaseException.class, () -> this.createCompanyService.execute(createCompanyDTO));
+    Assert.assertThrows(BaseException.class, () -> this.createCompanyService.execute(createCompanyDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }  
 }
