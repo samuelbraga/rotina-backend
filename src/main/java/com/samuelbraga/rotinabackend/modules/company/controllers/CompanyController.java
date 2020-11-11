@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/companies")
@@ -22,7 +24,11 @@ public class CompanyController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public CompanyDTO create(@RequestBody @Valid CreateCompanyDTO createCompanyDTO) {
+  public CompanyDTO create(HttpServletRequest request, @RequestBody @Valid CreateCompanyDTO createCompanyDTO) {
+    UUID userId = (UUID) request.getSession().getAttribute("userId");
+    
+    System.out.println(userId);
+    
     return this.createCompanyService.execute(createCompanyDTO);
   }
 }

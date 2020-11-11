@@ -11,6 +11,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,7 +31,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     boolean isValidToken = tokenAuthenticationService.isTokenValid(token);
     
     if(isValidToken) {
-      authenticatedClient(token);
+      UUID userId = tokenAuthenticationService.getUserId(token);
+      
+      authenticatedClient(userId);    
+      
+      HttpSession session = httpServletRequest.getSession(true);
+      session.setAttribute("userId", userId);
     }
     
     filterChain.doFilter(httpServletRequest, httpServletResponse);
@@ -46,8 +52,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     return token.substring(7);
   }
   
-  private void authenticatedClient(String token) {
-    UUID userId = tokenAuthenticationService.getUserId(token);
+  private void authenticatedClient(UUID userId) {
     Optional<User> optionalUser = this.userRepository.findById(userId);
     
     if(!optionalUser.isPresent()) {
