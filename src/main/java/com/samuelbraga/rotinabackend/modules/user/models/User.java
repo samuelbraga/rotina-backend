@@ -108,6 +108,26 @@ public class User implements UserDetails {
   public void setProfiles(List<Profile> profiles) {
     this.profiles = profiles;
   }
+  
+  public boolean isSuperAdmin() {
+    for (Profile profile: this.profiles) {
+      if(profile.getType().name().equals("SUPER_ADMIN")) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public boolean isAdmin() {
+    for (Profile profile: this.profiles) {
+      if(profile.getType().name().equals("ADMIN")) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

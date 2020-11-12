@@ -6,13 +6,17 @@ import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
 import com.samuelbraga.rotinabackend.modules.user.dtos.user.UserDTO;
 import com.samuelbraga.rotinabackend.modules.user.iservice.user.ICreateUserService;
+import com.samuelbraga.rotinabackend.modules.user.models.Profile;
 import com.samuelbraga.rotinabackend.modules.user.models.User;
 import com.samuelbraga.rotinabackend.modules.company.repositories.CompanyRepository;
+import com.samuelbraga.rotinabackend.modules.user.repositories.ProfileRepository;
 import com.samuelbraga.rotinabackend.modules.user.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,29 +24,36 @@ import java.util.UUID;
 public class CreateUserService implements ICreateUserService {
   
   private final UserRepository userRepository;
+  private final ProfileRepository profileRepository;
   private final CompanyRepository companyRepository;
   private final Hash hash;
   private final ModelMapper modelMapper;
   
 
   @Autowired
-  public CreateUserService(UserRepository userRepository, CompanyRepository companyRepository, Hash hash, ModelMapper modelMapper) {
+  public CreateUserService(UserRepository userRepository, ProfileRepository profileRepository, CompanyRepository companyRepository, Hash hash, ModelMapper modelMapper) {
     this.userRepository = userRepository;
+    this.profileRepository = profileRepository;
     this.companyRepository = companyRepository;
     this.modelMapper = modelMapper;
     this.hash = hash;
   }
 
   @Override
-  public UserDTO execute(CreateUserDTO createUserDTO) {
+  public UserDTO execute(CreateUserDTO createUserDTO, UUID userId) {
+    this.verifyUserIsAuthorized(userId, createUserDTO.getCompanyId());
     this.verifyUserEmailExist(createUserDTO.getEmail());
-    Company company = this.findCompany(createUserDTO.getCompanyId());    
+    
+    Company company = this.findCompany(createUserDTO.getCompanyId());  
+    List<Profile> profiles = this.findProfiles(createUserDTO.getProfileId());
     
     String hashedPassword = hashPassword(createUserDTO.getPassword());
     createUserDTO.setPassword(hashedPassword);
     
     User user = new User(createUserDTO);
     user.setCompany(company);
+    user.setProfiles(profiles);
+    
     this.userRepository.save(user);
 
     return this.modelMapper.map(user, UserDTO.class);
@@ -68,5 +79,42 @@ public class CreateUserService implements ICreateUserService {
     }
     
     return company.get();
+  }
+  
+  public List<Profile> findProfiles(UUID profileId) {
+    Optional<Profile> profile = this.profileRepository.findById(profileId);
+
+    if(!(profile.isPresent())) {
+      throw new BaseException("Profile does not exists");
+    }
+
+    ArrayList<Profile> profiles = new ArrayList<>();
+    profiles.add(profile.get());
+
+    return profiles;
+  }
+
+  private User getUser(UUID userId) {
+    Optional<User> user = this.userRepository.findById(userId);
+
+    if(!user.isPresent()) {
+      throw new BaseException("User does not exists");
+    }
+
+    return user.get();
+  }
+  
+  private void verifyUserIsAuthorized(UUID userId, UUID companyId) {
+    User user = this.getUser(userId);
+
+    if(user.isSuperAdmin()) {
+      return;
+    }
+    
+    if(user.isAdmin() && user.getCompany().getId() == companyId) {
+      return;
+    }
+
+    throw new BaseException("User does not permission");
   }
 }

@@ -25,8 +25,11 @@ public class CreateUserDTO {
   private String password;
   
   @NotNull
+  private UUID profileId;
+  
+  @NotNull
   private UUID companyId;
-
+  
   public CreateUserDTO() {
   }
 
@@ -35,12 +38,14 @@ public class CreateUserDTO {
                        @NotNull @NotEmpty String lastName,
                        @NotNull @NotEmpty String phone,
                        @NotNull @NotEmpty @Length String password,
-                       @NotNull @NotEmpty UUID companyId) {
+                       @NotNull UUID profileId,
+                       @NotNull UUID companyId) {
     this.email = email;
     this.name = name;
     this.lastName = lastName;
     this.phone = phone;
     this.password = password;
+    this.profileId = profileId;
     this.companyId = companyId;
   }
 
@@ -78,6 +83,14 @@ public class CreateUserDTO {
 
   public String getPassword() {
     return password;
+  }
+
+  public UUID getProfileId() {
+    return profileId;
+  }
+
+  public void setProfileId(UUID profileId) {
+    this.profileId = profileId;
   }
 
   public void setPassword(String password) {

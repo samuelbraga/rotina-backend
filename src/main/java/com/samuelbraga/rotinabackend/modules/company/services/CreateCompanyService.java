@@ -6,14 +6,12 @@ import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.modules.company.iservice.ICreateCompanyService;
 import com.samuelbraga.rotinabackend.modules.company.models.Company;
 import com.samuelbraga.rotinabackend.modules.company.repositories.CompanyRepository;
-import com.samuelbraga.rotinabackend.modules.user.models.Profile;
 import com.samuelbraga.rotinabackend.modules.user.models.User;
 import com.samuelbraga.rotinabackend.modules.user.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,9 +32,8 @@ public class CreateCompanyService implements ICreateCompanyService {
   @Override
   public CompanyDTO execute(CreateCompanyDTO createCompanyDTO, UUID userId) {
     User user = this.getUser(userId);
-    boolean authorized =  this.getUserProfile(user);
     
-    if(!authorized) {
+    if(!user.isSuperAdmin()) {
       throw new BaseException("User does not permission");
     }
         
@@ -60,17 +57,5 @@ public class CreateCompanyService implements ICreateCompanyService {
     }
     
     return user.get();
-  }
-  
-  private boolean getUserProfile(User user) {
-    List<Profile> profiles = user.getProfiles();
-    
-    for (Profile profile: profiles) {
-      if(profile.getType().name().equals("SUPER_ADMIN")) {
-        return true;
-      }
-    }
-    
-    return false;
   }
 }
