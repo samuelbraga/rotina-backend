@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.modules.user.services;
+package com.samuelbraga.rotinabackend.modules.user.services.user;
 
 import com.samuelbraga.rotinabackend.config.hash.Hash;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
@@ -11,7 +11,6 @@ import com.samuelbraga.rotinabackend.modules.user.models.Profile;
 import com.samuelbraga.rotinabackend.modules.user.models.User;
 import com.samuelbraga.rotinabackend.modules.user.repositories.ProfileRepository;
 import com.samuelbraga.rotinabackend.modules.user.repositories.UserRepository;
-import com.samuelbraga.rotinabackend.modules.user.services.user.CreateUserService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
