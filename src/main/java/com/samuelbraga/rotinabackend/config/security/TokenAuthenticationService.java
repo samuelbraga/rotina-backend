@@ -3,7 +3,7 @@ package com.samuelbraga.rotinabackend.config.security;
 import java.util.Date;
 import java.util.UUID;
 
-import com.samuelbraga.rotinabackend.modules.user.models.User;
+import com.samuelbraga.rotinabackend.models.User;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;

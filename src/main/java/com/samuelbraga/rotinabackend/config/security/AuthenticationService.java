@@ -1,7 +1,7 @@
 package com.samuelbraga.rotinabackend.config.security;
 
-import com.samuelbraga.rotinabackend.modules.user.models.User;
-import com.samuelbraga.rotinabackend.modules.user.repositories.UserRepository;
+import com.samuelbraga.rotinabackend.models.User;
+import com.samuelbraga.rotinabackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

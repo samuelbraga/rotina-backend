@@ -1,8 +1,8 @@
 package com.samuelbraga.rotinabackend.config.security;
 
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
-import com.samuelbraga.rotinabackend.modules.user.models.User;
-import com.samuelbraga.rotinabackend.modules.user.repositories.UserRepository;
+import com.samuelbraga.rotinabackend.models.User;
+import com.samuelbraga.rotinabackend.repositories.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
