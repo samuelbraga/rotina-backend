@@ -1,8 +1,8 @@
 package com.samuelbraga.rotinabackend.services.company;
 
-import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.dtos.company.CompanyDTO;
 import com.samuelbraga.rotinabackend.dtos.company.CreateCompanyDTO;
+import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.models.Company;
 import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.enums.TypeUser;
@@ -26,13 +26,15 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
+
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
 class CreateCompanyServiceTests {
+
   @Mock
   private CompanyRepository companyRepository;
-  
+
   @Mock
   private UserRepository userRepository;
 
@@ -40,8 +42,8 @@ class CreateCompanyServiceTests {
   private ModelMapper modelMapper;
 
   @InjectMocks
-  private CompanyService createCompanyService;
-  
+  private CompanyService companyService;
+      
   @Test
   void itShouldBeCreatedNewCompany() {
     CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
@@ -52,7 +54,7 @@ class CreateCompanyServiceTests {
     profile.setType(TypeUser.SUPER_ADMIN);
     List<Profile> profiles = new ArrayList<>();
     profiles.add(profile);
-    
+
     UUID userId = UUID.randomUUID();
 
     User user = new User();
@@ -62,12 +64,11 @@ class CreateCompanyServiceTests {
     user.setLastName("Bar");
     user.setPhone("999999999");
     user.setProfiles(profiles);
-    
+
     when(modelMapper.map(any(), any())).thenReturn(companyDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-    
-    
-    CompanyDTO result = this.createCompanyService.createCompany(createCompanyDTO, userId);
+
+    CompanyDTO result = this.companyService.createCompany(createCompanyDTO, userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals("foo", result.getName());
@@ -95,18 +96,18 @@ class CreateCompanyServiceTests {
 
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
     when(this.companyRepository.findByName(createCompanyDTO.getName())).thenReturn(Optional.of(company));
-    
-    Assert.assertThrows(BaseException.class, () -> this.createCompanyService.createCompany(createCompanyDTO, userId));
+
+    Assert.assertThrows(BaseException.class, () -> this.companyService.createCompany(createCompanyDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
   @Test
   void itShouldNotBeCreatedCompanyWithNonExistsUser() {
     CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
-    
+
     UUID userId = UUID.randomUUID();
-    
-    Assert.assertThrows(BaseException.class, () -> this.createCompanyService.createCompany(createCompanyDTO, userId));
+
+    Assert.assertThrows(BaseException.class, () -> this.companyService.createCompany(createCompanyDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -131,7 +132,7 @@ class CreateCompanyServiceTests {
 
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-    Assert.assertThrows(BaseException.class, () -> this.createCompanyService.createCompany(createCompanyDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.companyService.createCompany(createCompanyDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 }
