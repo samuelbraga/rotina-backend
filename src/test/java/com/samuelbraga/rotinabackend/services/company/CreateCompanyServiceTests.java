@@ -43,6 +43,27 @@ class CreateCompanyServiceTests {
 
   @InjectMocks
   private CompanyService companyService;
+
+  private User user;
+
+  private void getLoggedUser() {
+    UUID companyId = UUID.randomUUID();
+    UUID userId = UUID.randomUUID();
+
+    Company company = new Company("foo");
+    company.setId(companyId);
+
+    Profile profile = new Profile();
+    profile.setType(TypeUser.SUPER_ADMIN);
+    List<Profile> profiles = new ArrayList<>();
+    profiles.add(profile);
+
+    this.user = new User();
+    this.user.setId(userId);
+    this.user.setEmail("foo.bar@example.com");
+    this.user.setCompany(company);
+    this.user.setProfiles(profiles);
+  }
       
   @Test
   void itShouldBeCreatedNewCompany() {
@@ -50,23 +71,12 @@ class CreateCompanyServiceTests {
     CompanyDTO companyDTO = new CompanyDTO();
     companyDTO.setName("foo");
 
-    Profile profile = new Profile();
-    profile.setType(TypeUser.SUPER_ADMIN);
-    List<Profile> profiles = new ArrayList<>();
-    profiles.add(profile);
-
     UUID userId = UUID.randomUUID();
-
-    User user = new User();
-    user.setId(userId);
-    user.setEmail("foo.bar@example.com");
-    user.setName("Foo");
-    user.setLastName("Bar");
-    user.setPhone("999999999");
-    user.setProfiles(profiles);
-
+    this.getLoggedUser();
+    this.user.setId(userId);
+    
     when(modelMapper.map(any(), any())).thenReturn(companyDTO);
-    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
     CompanyDTO result = this.companyService.createCompany(createCompanyDTO, userId);
 
@@ -79,20 +89,9 @@ class CreateCompanyServiceTests {
     Company company = new Company("foo");
     CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
 
-    Profile profile = new Profile();
-    profile.setType(TypeUser.SUPER_ADMIN);
-    List<Profile> profiles = new ArrayList<>();
-    profiles.add(profile);
-
     UUID userId = UUID.randomUUID();
-
-    User user = new User();
-    user.setId(userId);
-    user.setEmail("foo.bar@example.com");
-    user.setName("Foo");
-    user.setLastName("Bar");
-    user.setPhone("999999999");
-    user.setProfiles(profiles);
+    this.getLoggedUser();
+    this.user.setId(userId);
 
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
     when(this.companyRepository.findByName(createCompanyDTO.getName())).thenReturn(Optional.of(company));
@@ -121,14 +120,10 @@ class CreateCompanyServiceTests {
     profiles.add(profile);
 
     UUID userId = UUID.randomUUID();
-
-    User user = new User();
-    user.setId(userId);
-    user.setEmail("foo.bar@example.com");
-    user.setName("Foo");
-    user.setLastName("Bar");
-    user.setPhone("999999999");
-    user.setProfiles(profiles);
+    
+    this.getLoggedUser();
+    this.user.setId(userId);
+    this.user.setProfiles(profiles);
 
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
