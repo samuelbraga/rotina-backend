@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class BaseExceptionHandler {
   
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler({BaseException.class})
+  @ExceptionHandler(BaseException.class)
   public BaseExceptionDTO handle(BaseException baseException) {
     return new BaseExceptionDTO(baseException.getMessage());
   }
