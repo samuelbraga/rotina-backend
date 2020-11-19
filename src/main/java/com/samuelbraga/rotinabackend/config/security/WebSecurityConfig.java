@@ -47,6 +47,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
       .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
       .antMatchers(HttpMethod.POST, "/session").permitAll()
+      .antMatchers("/swagger**").permitAll()
+      .antMatchers("/webjars/**").permitAll()
+      .antMatchers("/swagger-resources/**").permitAll()
+      .antMatchers("/v2/api-docs**").permitAll()
+      .antMatchers("/csrf**").permitAll()
          
       .anyRequest().authenticated()
       .and().csrf().disable()
