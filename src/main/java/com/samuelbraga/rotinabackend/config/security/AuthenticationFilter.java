@@ -55,9 +55,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
   private void authenticatedClient(UUID userId) {
     Optional<User> optionalUser = this.userRepository.findById(userId);
     
-    if(!optionalUser.isPresent()) {
-      throw new BaseException("User does not exists");
-    }
+    optionalUser.orElseThrow(() -> new BaseException("User does not exists"));
     
     User user = optionalUser.get();
     

@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.services.company;
+package com.samuelbraga.rotinabackend.servicesimpl.company;
 
 import com.samuelbraga.rotinabackend.dtos.company.CompanyDTO;
 import com.samuelbraga.rotinabackend.dtos.company.CreateCompanyDTO;
@@ -9,7 +9,7 @@ import com.samuelbraga.rotinabackend.enums.TypeUser;
 import com.samuelbraga.rotinabackend.models.Profile;
 import com.samuelbraga.rotinabackend.models.User;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
-import com.samuelbraga.rotinabackend.services.CompanyService;
+import com.samuelbraga.rotinabackend.servicesimpl.CompanyServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
-class CreateCompanyServiceTests {
+class CreateCompanyServiceImplTests {
 
   @Mock
   private CompanyRepository companyRepository;
@@ -42,7 +42,7 @@ class CreateCompanyServiceTests {
   private ModelMapper modelMapper;
 
   @InjectMocks
-  private CompanyService companyService;
+  private CompanyServiceImpl companyServiceImpl;
 
   private User user;
 
@@ -78,7 +78,7 @@ class CreateCompanyServiceTests {
     when(modelMapper.map(any(), any())).thenReturn(companyDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    CompanyDTO result = this.companyService.createCompany(createCompanyDTO, userId);
+    CompanyDTO result = this.companyServiceImpl.createCompany(createCompanyDTO, userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals("foo", result.getName());
@@ -96,7 +96,7 @@ class CreateCompanyServiceTests {
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
     when(this.companyRepository.findByName(createCompanyDTO.getName())).thenReturn(Optional.of(company));
 
-    Assert.assertThrows(BaseException.class, () -> this.companyService.createCompany(createCompanyDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.companyServiceImpl.createCompany(createCompanyDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -106,7 +106,7 @@ class CreateCompanyServiceTests {
 
     UUID userId = UUID.randomUUID();
 
-    Assert.assertThrows(BaseException.class, () -> this.companyService.createCompany(createCompanyDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.companyServiceImpl.createCompany(createCompanyDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -127,7 +127,7 @@ class CreateCompanyServiceTests {
 
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-    Assert.assertThrows(BaseException.class, () -> this.companyService.createCompany(createCompanyDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.companyServiceImpl.createCompany(createCompanyDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 }

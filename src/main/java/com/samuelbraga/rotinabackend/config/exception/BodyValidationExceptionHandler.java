@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class BodyValidationExceptionHandler {
@@ -27,16 +27,11 @@ public class BodyValidationExceptionHandler {
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public List<ErrorBodyValidationDTO> handle(MethodArgumentNotValidException methodArgumentNotValidException) {
-    List<ErrorBodyValidationDTO> errorBodyValidationDTOS = new ArrayList<>();
-    
     List<FieldError> fieldErrors =  methodArgumentNotValidException.getBindingResult().getFieldErrors();
-    
-    fieldErrors.forEach(error -> {
-      String message = this.messageSource.getMessage(error, LocaleContextHolder.getLocale());
-      ErrorBodyValidationDTO errorBodyValidation = new ErrorBodyValidationDTO(error.getField(), message);
-      errorBodyValidationDTOS.add(errorBodyValidation);
-    });
-   
-    return errorBodyValidationDTOS;
+
+    return fieldErrors.stream().map(fieldError -> {
+      String message = this.messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+      return new ErrorBodyValidationDTO(fieldError.getField(), message);
+    }).collect(Collectors.toList());     
   }
 }

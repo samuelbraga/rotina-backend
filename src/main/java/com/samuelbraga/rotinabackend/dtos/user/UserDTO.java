@@ -1,9 +1,11 @@
 package com.samuelbraga.rotinabackend.dtos.user;
 
 import com.samuelbraga.rotinabackend.models.Company;
+import lombok.Data;
 
 import java.util.UUID;
 
+@Data
 public class UserDTO {
 
   private UUID id;
@@ -12,52 +14,4 @@ public class UserDTO {
   private String lastName;
   private String phone;
   private Company company;
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-  
-  public Company getCompany() {
-    return company;
-  }
-
-  public void setCompany(Company company) {
-    this.company = company;
-  }
 }

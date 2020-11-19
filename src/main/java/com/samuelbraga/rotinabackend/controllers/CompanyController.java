@@ -2,7 +2,7 @@ package com.samuelbraga.rotinabackend.controllers;
 
 import com.samuelbraga.rotinabackend.dtos.company.CompanyDTO;
 import com.samuelbraga.rotinabackend.dtos.company.CreateCompanyDTO;
-import com.samuelbraga.rotinabackend.iservices.ICompanyService;
+import com.samuelbraga.rotinabackend.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,10 @@ import java.util.UUID;
 @RequestMapping("/companies")
 public class CompanyController {
   
-  private final ICompanyService createCompanyService;
+  private final CompanyService createCompanyService;
 
   @Autowired
-  public CompanyController(ICompanyService createCompanyService) {
+  public CompanyController(CompanyService createCompanyService) {
     this.createCompanyService = createCompanyService;
   }
 

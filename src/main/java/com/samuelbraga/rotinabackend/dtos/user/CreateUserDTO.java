@@ -1,5 +1,6 @@
 package com.samuelbraga.rotinabackend.dtos.user;
 
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
+@Data
 public class CreateUserDTO {
   
   @NotNull @NotEmpty @Email
@@ -46,62 +48,6 @@ public class CreateUserDTO {
     this.phone = phone;
     this.password = password;
     this.profileId = profileId;
-    this.companyId = companyId;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public UUID getProfileId() {
-    return profileId;
-  }
-
-  public void setProfileId(UUID profileId) {
-    this.profileId = profileId;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-  
-  public UUID getCompanyId() {
-    return companyId;
-  }
-
-  public void setCompanyId(UUID companyId) {
     this.companyId = companyId;
   }
 }

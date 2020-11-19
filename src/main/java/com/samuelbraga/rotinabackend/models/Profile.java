@@ -1,6 +1,7 @@
 package com.samuelbraga.rotinabackend.models;
 
 import com.samuelbraga.rotinabackend.enums.TypeUser;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Data
 public class Profile implements GrantedAuthority {
   private static final long serialVersionUID = 2405172041950251807L;
 
@@ -19,22 +21,6 @@ public class Profile implements GrantedAuthority {
 
   @Enumerated(EnumType.STRING)
   private TypeUser type;
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public TypeUser getType() {
-    return type;
-  }
-
-  public void setType(TypeUser type) {
-    this.type = type;
-  }
 
   @Override
   public String getAuthority() {

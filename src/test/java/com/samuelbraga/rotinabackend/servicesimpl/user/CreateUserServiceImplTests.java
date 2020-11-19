@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.services.user;
+package com.samuelbraga.rotinabackend.servicesimpl.user;
 
 import com.samuelbraga.rotinabackend.config.hash.Hash;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
@@ -11,7 +11,7 @@ import com.samuelbraga.rotinabackend.models.Profile;
 import com.samuelbraga.rotinabackend.models.User;
 import com.samuelbraga.rotinabackend.repositories.ProfileRepository;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
-import com.samuelbraga.rotinabackend.services.UserService;
+import com.samuelbraga.rotinabackend.servicesimpl.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
-class CreateUserServiceTests {
+class CreateUserServiceImplTests {
   @Mock
   private UserRepository userRepository;
   
@@ -48,7 +48,7 @@ class CreateUserServiceTests {
   private Hash hash;
 
   @InjectMocks
-  private UserService userService;
+  private UserServiceImpl userServiceImpl;
   
   private User user;
   
@@ -107,7 +107,7 @@ class CreateUserServiceTests {
     when(modelMapper.map(any(), any())).thenReturn(userDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    UserDTO result = this.userService.createUser(createUserDTO, userId);
+    UserDTO result = this.userServiceImpl.createUser(createUserDTO, userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals("Foo", result.getName());
@@ -155,7 +155,7 @@ class CreateUserServiceTests {
     when(modelMapper.map(any(), any())).thenReturn(userDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    UserDTO result = this.userService.createUser(createUserDTO, userId);
+    UserDTO result = this.userServiceImpl.createUser(createUserDTO, userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals("Foo", result.getName());
@@ -202,7 +202,7 @@ class CreateUserServiceTests {
     when(modelMapper.map(any(), any())).thenReturn(userDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userService.createUser(createUserDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -237,7 +237,7 @@ class CreateUserServiceTests {
     when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
     when(this.userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userService.createUser(createUserDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -269,7 +269,7 @@ class CreateUserServiceTests {
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
     when(userRepository.findByEmail(createUserDTO.getEmail())).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userService.createUser(createUserDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -295,7 +295,7 @@ class CreateUserServiceTests {
     when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userService.createUser(createUserDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -321,7 +321,7 @@ class CreateUserServiceTests {
     when(this.companyRepository.findById(companyId)).thenReturn(Optional.of(company));
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userService.createUser(createUserDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -342,7 +342,7 @@ class CreateUserServiceTests {
       profileId,
       companyId);
 
-    Assert.assertThrows(BaseException.class, () -> this.userService.createUser(createUserDTO, userId));
+    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 }

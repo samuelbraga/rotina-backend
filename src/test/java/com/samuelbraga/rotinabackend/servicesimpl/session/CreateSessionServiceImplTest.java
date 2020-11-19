@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.services.session;
+package com.samuelbraga.rotinabackend.servicesimpl.session;
 
 import com.samuelbraga.rotinabackend.config.security.TokenAuthenticationService;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
@@ -9,7 +9,7 @@ import com.samuelbraga.rotinabackend.models.Profile;
 import com.samuelbraga.rotinabackend.models.User;
 import com.samuelbraga.rotinabackend.repositories.ProfileRepository;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
-import com.samuelbraga.rotinabackend.services.SessionService;
+import com.samuelbraga.rotinabackend.servicesimpl.SessionServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,7 +29,7 @@ import java.util.UUID;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
-class CreateSessionServiceTest {
+class CreateSessionServiceImplTest {
   @Mock
   private final AuthenticationManager authenticationManager;
 
@@ -37,7 +37,7 @@ class CreateSessionServiceTest {
   private final TokenAuthenticationService tokenAuthenticationService;
 
   @InjectMocks
-  private final SessionService sessionService;
+  private final SessionServiceImpl sessionServiceImpl;
 
   @InjectMocks
   private final ProfileRepository profileRepository;
@@ -46,10 +46,10 @@ class CreateSessionServiceTest {
   private final UserRepository userRepository;
   
   @Autowired
-  public CreateSessionServiceTest(AuthenticationManager authenticationManager, TokenAuthenticationService tokenAuthenticationService, SessionService sessionService, ProfileRepository profileRepository, UserRepository userRepository) {
+  public CreateSessionServiceImplTest(AuthenticationManager authenticationManager, TokenAuthenticationService tokenAuthenticationService, SessionServiceImpl sessionServiceImpl, ProfileRepository profileRepository, UserRepository userRepository) {
     this.authenticationManager = authenticationManager;
     this.tokenAuthenticationService = tokenAuthenticationService;
-    this.sessionService = sessionService;
+    this.sessionServiceImpl = sessionServiceImpl;
     this.profileRepository = profileRepository;
     this.userRepository = userRepository;
   }
@@ -72,7 +72,7 @@ class CreateSessionServiceTest {
     
     CreateSessionDTO createSessionDTO = new CreateSessionDTO("foo.bar@example.com", "123456");
     
-    TokenDTO result = this.sessionService.createSession(createSessionDTO);
+    TokenDTO result = this.sessionServiceImpl.createSession(createSessionDTO);
 
     Assert.assertNotNull(result);
   }
@@ -95,7 +95,7 @@ class CreateSessionServiceTest {
 
     CreateSessionDTO createSessionDTO = new CreateSessionDTO("bar.foo@example.com", "12345678");
     
-    Assert.assertThrows(BaseException.class, () -> this.sessionService.createSession(createSessionDTO));
+    Assert.assertThrows(BaseException.class, () -> this.sessionServiceImpl.createSession(createSessionDTO));
   }
 }
 

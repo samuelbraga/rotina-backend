@@ -1,6 +1,7 @@
 package com.samuelbraga.rotinabackend.models;
 
 import com.samuelbraga.rotinabackend.dtos.user.CreateUserDTO;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Data
 public class User implements UserDetails {
   private static final long serialVersionUID = 1905122041950251207L;
   
@@ -47,67 +49,7 @@ public class User implements UserDetails {
     this.phone = createUserDTO.getPhone();
     this.password = createUserDTO.getPassword();
   }
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-  
-  public void setPassword(String password) {
-    this.password = password;
-  }
-  
-  public Company getCompany() {
-    return company;
-  }
-
-  public void setCompany(Company company) {
-    this.company = company;
-  }
-
-  public List<Profile> getProfiles() {
-    return profiles;
-  }
-
-  public void setProfiles(List<Profile> profiles) {
-    this.profiles = profiles;
-  }
-  
+    
   public boolean isSuperAdmin() {
     for (Profile profile: this.profiles) {
       if(profile.getType().name().equals("SUPER_ADMIN")) {

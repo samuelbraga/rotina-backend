@@ -1,6 +1,6 @@
 package com.samuelbraga.rotinabackend.controllers;
 
-import com.samuelbraga.rotinabackend.iservices.IUserService;
+import com.samuelbraga.rotinabackend.services.UserService;
 import com.samuelbraga.rotinabackend.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.dtos.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,10 @@ import java.util.UUID;
 @RequestMapping("/users")
 public class UserController {
 
-  private final IUserService userService;
+  private final UserService userService;
 
   @Autowired
-  public UserController(IUserService userService) {
+  public UserController(UserService userService) {
     this.userService = userService;
   }
 

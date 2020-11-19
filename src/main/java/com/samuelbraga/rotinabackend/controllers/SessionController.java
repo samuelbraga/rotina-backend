@@ -2,7 +2,7 @@ package com.samuelbraga.rotinabackend.controllers;
 
 import com.samuelbraga.rotinabackend.dtos.session.CreateSessionDTO;
 import com.samuelbraga.rotinabackend.dtos.session.TokenDTO;
-import com.samuelbraga.rotinabackend.iservices.ISessionService;
+import com.samuelbraga.rotinabackend.services.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,10 +15,10 @@ import javax.validation.Valid;
 @RequestMapping("/session")
 public class SessionController {
   
-  private final ISessionService sessionService;
+  private final SessionService sessionService;
 
   @Autowired
-  public SessionController(ISessionService sessionService) {
+  public SessionController(SessionService sessionService) {
     this.sessionService = sessionService;
   }
   
