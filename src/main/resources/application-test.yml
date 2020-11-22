@@ -6,7 +6,9 @@ spring:
     url: "jdbc:h2:mem:rotina"
     username: "rotina"
     password: "rotina"
-  
+  profiles:
+    active: "test"
+
   jpa:
     database-platform: "org.hibernate.dialect.H2Dialect"
     hibernate:
@@ -14,6 +16,18 @@ spring:
     properties:
       hibernate:
         dialect: "org.hibernate.dialect.H2Dialect"
+        
+jwt:
+  secret: "secret"
+  expiration: "86400000"
+    
+amazon:
+  access-key: "access-key"
+  secret-key: "secret-key"
+  region: "US_WEST_2"
+  s3:
+    bucket-name: "bucket-name"
+    endpoint: "https:/bucket-name.s3-us-west-2.amazonaws.com/"
 
 flyway:
   enabled: false

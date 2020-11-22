@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -30,8 +29,7 @@ public class AmazonS3ImageService extends AmazonS3ClientService {
   }
 
   public Image insertImages(MultipartFile multipartFile, UUID id, String folder) {
-    Image image = uploadImageToAmazon(multipartFile, id, folder);
-    return image;
+    return uploadImageToAmazon(multipartFile, id, folder);
   }
 
   public Image uploadImageToAmazon(MultipartFile multipartFile, UUID id, String folder) {
@@ -43,7 +41,7 @@ public class AmazonS3ImageService extends AmazonS3ClientService {
       throw new BaseException("Image invalid format");
     } else {
       String url = uploadMultipartFile(multipartFile, id, folder);
-
+      
       Image image = new Image();
       image.setImage_url(url);
 
@@ -63,9 +61,10 @@ public class AmazonS3ImageService extends AmazonS3ClientService {
     try {
       File file = FileUtils.convertMultipartToFile(multipartFile);
       String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
-      String fileName = folder + "/" + id + "." + extension;
+      String fileName = folder + id + "." + extension;
       
       uploadPublicFile(fileName, file);
+
       file.delete();
       
       fileUrl = getUrl().concat(fileName);

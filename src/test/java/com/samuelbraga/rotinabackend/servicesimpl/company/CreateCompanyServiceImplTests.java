@@ -1,5 +1,6 @@
 package com.samuelbraga.rotinabackend.servicesimpl.company;
 
+import com.samuelbraga.rotinabackend.config.aws.s3.AmazonS3ImageService;
 import com.samuelbraga.rotinabackend.dtos.company.CompanyDTO;
 import com.samuelbraga.rotinabackend.dtos.company.CreateCompanyDTO;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
@@ -40,6 +41,9 @@ class CreateCompanyServiceImplTests {
 
   @Mock
   private ModelMapper modelMapper;
+
+  @Mock
+  private AmazonS3ImageService amazonS3ImageService;
 
   @InjectMocks
   private CompanyServiceImpl companyServiceImpl;

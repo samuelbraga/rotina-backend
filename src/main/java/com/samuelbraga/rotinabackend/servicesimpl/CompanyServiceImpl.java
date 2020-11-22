@@ -85,7 +85,7 @@ public class CompanyServiceImpl implements CompanyService {
     
     Company company = this.getCompany(companyId);
 
-    Image image = this.amazonS3ImageService.insertImages(multipartFile, companyId, "companies");
+    Image image = this.amazonS3ImageService.insertImages(multipartFile, companyId, "companies/");
     company.setImage(image);
     
     this.companyRepository.save(company);

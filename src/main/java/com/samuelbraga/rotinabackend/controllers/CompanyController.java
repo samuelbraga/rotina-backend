@@ -38,8 +38,7 @@ public class CompanyController {
     return this.companyService.listCompanies(userId);
   }
 
-  @PutMapping
-  @RequestMapping("/{companyId}/logo")
+  @PutMapping(path = "/{companyId}/logo")
   @ResponseStatus(HttpStatus.OK)
   public CompanyDTO updateLogo(HttpServletRequest request, @PathVariable UUID companyId, @RequestPart(value = "logo") MultipartFile multipartFile) {
     UUID userId = (UUID) request.getSession().getAttribute("userId");

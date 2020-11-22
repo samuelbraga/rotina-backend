@@ -6,6 +6,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +29,7 @@ public class AmazonS3ClientService {
 
   @Value("${amazon.region}")
   private String region;
-
+  
   protected AmazonS3 getClient() {
     return amazonS3;
   }
@@ -42,8 +43,9 @@ public class AmazonS3ClientService {
   }
 
   @PostConstruct
+  @Profile("!test")
   private void init() {
-
+    
     BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
     this.amazonS3 = AmazonS3ClientBuilder.standard()
