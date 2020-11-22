@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+
 @RestControllerAdvice
 public class HttpMessageNotReadableExceptionHandler {
   
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public HttpMessageNotReadableExceptionDTO handle(HttpMessageNotReadableException ex) {
-    return new HttpMessageNotReadableExceptionDTO(ex.getMessage().split(";")[0]);
+    return new HttpMessageNotReadableExceptionDTO(Objects.requireNonNull(ex.getMessage()).split(";")[0]);
   }
 }

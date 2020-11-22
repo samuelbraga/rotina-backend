@@ -22,6 +22,9 @@ public class Company implements Serializable {
   @Column(unique = true)
   private String name;
   
+  @OneToOne
+  private Image image;
+  
   public Company() {}
   
   public Company(String name) {
