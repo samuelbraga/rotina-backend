@@ -6,9 +6,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class Hash {
-  
+
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
-  
+
   @Autowired
   public Hash() {
     this.bCryptPasswordEncoder = new BCryptPasswordEncoder();

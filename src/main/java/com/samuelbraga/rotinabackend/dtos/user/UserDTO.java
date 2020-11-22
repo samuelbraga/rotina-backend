@@ -1,9 +1,8 @@
 package com.samuelbraga.rotinabackend.dtos.user;
 
 import com.samuelbraga.rotinabackend.models.Company;
-import lombok.Data;
-
 import java.util.UUID;
+import lombok.Data;
 
 @Data
 public class UserDTO {

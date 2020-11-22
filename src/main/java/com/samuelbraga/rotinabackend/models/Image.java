@@ -1,17 +1,17 @@
 package com.samuelbraga.rotinabackend.models;
 
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
-
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.UUID;
+import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Data
 public class Image {
+
   @Id
   @GeneratedValue(generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")

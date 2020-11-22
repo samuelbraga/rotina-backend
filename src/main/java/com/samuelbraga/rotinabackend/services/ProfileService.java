@@ -1,7 +1,6 @@
 package com.samuelbraga.rotinabackend.services;
 
 import com.samuelbraga.rotinabackend.dtos.profile.ProfileDTO;
-
 import java.util.List;
 import java.util.UUID;
 

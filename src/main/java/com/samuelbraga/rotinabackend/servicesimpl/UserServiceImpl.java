@@ -1,35 +1,41 @@
 package com.samuelbraga.rotinabackend.servicesimpl;
 
 import com.samuelbraga.rotinabackend.config.hash.Hash;
-import com.samuelbraga.rotinabackend.exceptions.BaseException;
-import com.samuelbraga.rotinabackend.models.Company;
-import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.dtos.user.UserDTO;
+import com.samuelbraga.rotinabackend.exceptions.BaseException;
+import com.samuelbraga.rotinabackend.models.Company;
 import com.samuelbraga.rotinabackend.models.Profile;
 import com.samuelbraga.rotinabackend.models.User;
+import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.repositories.ProfileRepository;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements com.samuelbraga.rotinabackend.services.UserService {
+public class UserServiceImpl
+  implements com.samuelbraga.rotinabackend.services.UserService {
+
   private final UserRepository userRepository;
   private final ProfileRepository profileRepository;
   private final CompanyRepository companyRepository;
   private final Hash hash;
   private final ModelMapper modelMapper;
 
-
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, ProfileRepository profileRepository, CompanyRepository companyRepository, Hash hash, ModelMapper modelMapper) {
+  public UserServiceImpl(
+    UserRepository userRepository,
+    ProfileRepository profileRepository,
+    CompanyRepository companyRepository,
+    Hash hash,
+    ModelMapper modelMapper
+  ) {
     this.userRepository = userRepository;
     this.profileRepository = profileRepository;
     this.companyRepository = companyRepository;
@@ -64,16 +70,16 @@ public class UserServiceImpl implements com.samuelbraga.rotinabackend.services.U
   private void verifyUserEmailExist(String email) {
     Optional<User> user = this.userRepository.findByEmail(email);
 
-    if(user.isPresent()) {
+    if (user.isPresent()) {
       throw new BaseException("User email already exists");
     }
   }
 
-  private Company findCompany(UUID companyId){
+  private Company findCompany(UUID companyId) {
     Optional<Company> company = this.companyRepository.findById(companyId);
 
     company.orElseThrow(() -> new BaseException("Company does not exists"));
-   
+
     return company.get();
   }
 
@@ -84,7 +90,7 @@ public class UserServiceImpl implements com.samuelbraga.rotinabackend.services.U
 
     ArrayList<Profile> profiles = new ArrayList<>();
     profiles.add(profile.get());
-    
+
     return profiles;
   }
 
@@ -99,11 +105,11 @@ public class UserServiceImpl implements com.samuelbraga.rotinabackend.services.U
   private void verifyUserIsAuthorized(UUID userId, UUID companyId) {
     User user = this.getUser(userId);
 
-    if(user.isSuperAdmin()) {
+    if (user.isSuperAdmin()) {
       return;
     }
 
-    if(user.isAdmin() && user.getCompany().getId() == companyId) {
+    if (user.isAdmin() && user.getCompany().getId() == companyId) {
       return;
     }
 

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ErrorBodyValidationDTO {
-  
+
   private String field;
   private String message;
 

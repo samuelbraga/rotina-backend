@@ -1,15 +1,14 @@
 package com.samuelbraga.rotinabackend.controllers;
 
-import com.samuelbraga.rotinabackend.services.UserService;
 import com.samuelbraga.rotinabackend.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.dtos.user.UserDTO;
+import com.samuelbraga.rotinabackend.services.UserService;
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -24,7 +23,10 @@ public class UserController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public UserDTO create(HttpServletRequest request, @RequestBody @Valid CreateUserDTO createUserDTO) {
+  public UserDTO create(
+    HttpServletRequest request,
+    @RequestBody @Valid CreateUserDTO createUserDTO
+  ) {
     UUID userId = (UUID) request.getSession().getAttribute("userId");
     return this.userService.createUser(createUserDTO, userId);
   }

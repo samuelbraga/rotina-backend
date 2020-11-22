@@ -5,16 +5,16 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-
 @Service
 public class AmazonS3ClientService {
+
   private AmazonS3 amazonS3;
-  
+
   @Value("${amazon.s3.endpoint}")
   private String url;
 
@@ -29,7 +29,7 @@ public class AmazonS3ClientService {
 
   @Value("${amazon.region}")
   private String region;
-  
+
   protected AmazonS3 getClient() {
     return amazonS3;
   }
@@ -45,12 +45,16 @@ public class AmazonS3ClientService {
   @PostConstruct
   @Profile("!test")
   private void init() {
-    
-    BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+    BasicAWSCredentials credentials = new BasicAWSCredentials(
+      accessKey,
+      secretKey
+    );
 
-    this.amazonS3 = AmazonS3ClientBuilder.standard()
-      .withRegion(Regions.valueOf(region))
-      .withCredentials(new AWSStaticCredentialsProvider(credentials))
-      .build();
+    this.amazonS3 =
+      AmazonS3ClientBuilder
+        .standard()
+        .withRegion(Regions.valueOf(region))
+        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .build();
   }
 }

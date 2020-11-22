@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class TokenDTO {
+
   private String token;
   private String type;
 
@@ -11,5 +12,4 @@ public class TokenDTO {
     this.token = token;
     this.type = type;
   }
-  
 }

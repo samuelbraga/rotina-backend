@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class HttpMessageNotReadableExceptionDTO {
+
   private final String message;
 
   public HttpMessageNotReadableExceptionDTO(String message) {

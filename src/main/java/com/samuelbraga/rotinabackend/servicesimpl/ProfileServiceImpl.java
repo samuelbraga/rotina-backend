@@ -7,34 +7,37 @@ import com.samuelbraga.rotinabackend.models.User;
 import com.samuelbraga.rotinabackend.repositories.ProfileRepository;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
 import com.samuelbraga.rotinabackend.services.ProfileService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
-  
+
   private ProfileRepository profileRepository;
   private final UserRepository userRepository;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public ProfileServiceImpl(ProfileRepository profileRepository, UserRepository userRepository, ModelMapper modelMapper) {
+  public ProfileServiceImpl(
+    ProfileRepository profileRepository,
+    UserRepository userRepository,
+    ModelMapper modelMapper
+  ) {
     this.profileRepository = profileRepository;
     this.userRepository = userRepository;
     this.modelMapper = modelMapper;
   }
-  
+
   @Override
   public List<ProfileDTO> listProfiles(UUID userId) {
     User user = this.getUser(userId);
 
-    if(!user.isSuperAdmin()) {
+    if (!user.isSuperAdmin()) {
       throw new BaseException("User does not permission");
     }
 

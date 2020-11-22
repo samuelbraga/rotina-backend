@@ -3,7 +3,6 @@ package com.samuelbraga.rotinabackend.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-
 @AllArgsConstructor
 public enum TypeUser {
   DEFAULT("DEFAULT"),

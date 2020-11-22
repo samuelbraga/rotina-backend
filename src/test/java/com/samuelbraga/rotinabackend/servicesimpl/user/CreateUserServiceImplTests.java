@@ -1,17 +1,23 @@
 package com.samuelbraga.rotinabackend.servicesimpl.user;
 
+import static org.mockito.Mockito.*;
+
 import com.samuelbraga.rotinabackend.config.hash.Hash;
-import com.samuelbraga.rotinabackend.exceptions.BaseException;
-import com.samuelbraga.rotinabackend.models.Company;
-import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.dtos.user.CreateUserDTO;
 import com.samuelbraga.rotinabackend.dtos.user.UserDTO;
 import com.samuelbraga.rotinabackend.enums.TypeUser;
+import com.samuelbraga.rotinabackend.exceptions.BaseException;
+import com.samuelbraga.rotinabackend.models.Company;
 import com.samuelbraga.rotinabackend.models.Profile;
 import com.samuelbraga.rotinabackend.models.User;
+import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.repositories.ProfileRepository;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
 import com.samuelbraga.rotinabackend.servicesimpl.UserServiceImpl;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,20 +27,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.mockito.Mockito.*;
-
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
 class CreateUserServiceImplTests {
+
   @Mock
   private UserRepository userRepository;
-  
+
   @Mock
   private ProfileRepository profileRepository;
 
@@ -49,16 +49,16 @@ class CreateUserServiceImplTests {
 
   @InjectMocks
   private UserServiceImpl userServiceImpl;
-  
+
   private User user;
-  
+
   private void getLoggedUser() {
     UUID companyId = UUID.randomUUID();
     UUID userId = UUID.randomUUID();
-    
+
     Company company = new Company("foo");
     company.setId(companyId);
-    
+
     Profile profile = new Profile();
     profile.setType(TypeUser.SUPER_ADMIN);
     List<Profile> profiles = new ArrayList<>();
@@ -70,7 +70,7 @@ class CreateUserServiceImplTests {
     this.user.setCompany(company);
     this.user.setProfiles(profiles);
   }
-  
+
   @Test
   void itShouldBeCreatedNewUserWithSuperAdmin() {
     UUID companyId = UUID.randomUUID();
@@ -79,31 +79,35 @@ class CreateUserServiceImplTests {
 
     Company company = new Company("foo");
     company.setId(companyId);
-    
+
     this.getLoggedUser();
     this.user.setId(userId);
-    
+
     Profile profile = new Profile();
     profile.setId(profileId);
     profile.setType(TypeUser.SUPER_ADMIN);
-    
-    CreateUserDTO createUserDTO = new CreateUserDTO("foo.bar@example.com",
+
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "foo.bar@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       profileId,
-      companyId);
+      companyId
+    );
 
     UserDTO userDTO = new UserDTO();
-      
+
     userDTO.setEmail("foo.bar@example.com");
     userDTO.setName("Foo");
     userDTO.setLastName("Bar");
     userDTO.setPhone("999999999");
-    
-    when(this.companyRepository.findById(companyId)).thenReturn(Optional.of(company));
-    when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
+
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
+    when(this.profileRepository.findById(profileId))
+      .thenReturn(Optional.of(profile));
     when(modelMapper.map(any(), any())).thenReturn(userDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
@@ -127,7 +131,7 @@ class CreateUserServiceImplTests {
 
     Company company = new Company("foo");
     company.setId(companyId);
-    
+
     Profile profile = new Profile();
     profile.setType(TypeUser.ADMIN);
     List<Profile> profiles = new ArrayList<>();
@@ -135,13 +139,15 @@ class CreateUserServiceImplTests {
 
     this.user.setProfiles(profiles);
 
-    CreateUserDTO createUserDTO = new CreateUserDTO("foo.bar@example.com",
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "foo.bar@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       profileId,
-      companyId);
+      companyId
+    );
 
     UserDTO userDTO = new UserDTO();
 
@@ -150,8 +156,10 @@ class CreateUserServiceImplTests {
     userDTO.setLastName("Bar");
     userDTO.setPhone("999999999");
 
-    when(this.companyRepository.findById(companyId)).thenReturn(Optional.of(company));
-    when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
+    when(this.profileRepository.findById(profileId))
+      .thenReturn(Optional.of(profile));
     when(modelMapper.map(any(), any())).thenReturn(userDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
@@ -182,13 +190,15 @@ class CreateUserServiceImplTests {
 
     this.user.setProfiles(profiles);
 
-    CreateUserDTO createUserDTO = new CreateUserDTO("bar.foo@example.com",
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "bar.foo@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       profileId,
-      UUID.randomUUID());
+      UUID.randomUUID()
+    );
 
     UserDTO userDTO = new UserDTO();
 
@@ -197,12 +207,17 @@ class CreateUserServiceImplTests {
     userDTO.setLastName("Bar");
     userDTO.setPhone("999999999");
 
-    when(this.companyRepository.findById(companyId)).thenReturn(Optional.of(company));
-    when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
+    when(this.profileRepository.findById(profileId))
+      .thenReturn(Optional.of(profile));
     when(modelMapper.map(any(), any())).thenReturn(userDTO);
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
+    Assert.assertThrows(
+      BaseException.class,
+      () -> this.userServiceImpl.createUser(createUserDTO, userId)
+    );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -222,22 +237,30 @@ class CreateUserServiceImplTests {
     profile.setType(TypeUser.DEFAULT);
     List<Profile> profiles = new ArrayList<>();
     profiles.add(profile);
-    
+
     this.user.setProfiles(profiles);
-    
-    CreateUserDTO createUserDTO = new CreateUserDTO("foo.bar@example.com",
+
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "foo.bar@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       profileId,
-      companyId);
+      companyId
+    );
 
-    when(this.companyRepository.findById(companyId)).thenReturn(Optional.of(company));
-    when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
-    when(this.userRepository.findById(userId)).thenReturn(Optional.of(this.user));
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
+    when(this.profileRepository.findById(profileId))
+      .thenReturn(Optional.of(profile));
+    when(this.userRepository.findById(userId))
+      .thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
+    Assert.assertThrows(
+      BaseException.class,
+      () -> this.userServiceImpl.createUser(createUserDTO, userId)
+    );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -256,20 +279,28 @@ class CreateUserServiceImplTests {
     Profile profile = new Profile();
     profile.setType(TypeUser.SUPER_ADMIN);
 
-    CreateUserDTO createUserDTO = new CreateUserDTO("foo.bar@example.com",
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "foo.bar@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       profileId,
-      companyId);
+      companyId
+    );
 
-    when(this.companyRepository.findById(companyId)).thenReturn(Optional.of(company));
-    when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
+    when(this.profileRepository.findById(profileId))
+      .thenReturn(Optional.of(profile));
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
-    when(userRepository.findByEmail(createUserDTO.getEmail())).thenReturn(Optional.of(this.user));
+    when(userRepository.findByEmail(createUserDTO.getEmail()))
+      .thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
+    Assert.assertThrows(
+      BaseException.class,
+      () -> this.userServiceImpl.createUser(createUserDTO, userId)
+    );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -280,22 +311,28 @@ class CreateUserServiceImplTests {
 
     this.getLoggedUser();
     this.user.setId(userId);
-    
+
     Profile profile = new Profile();
     profile.setType(TypeUser.SUPER_ADMIN);
 
-    CreateUserDTO createUserDTO = new CreateUserDTO("foo.bar@example.com",
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "foo.bar@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       profileId,
-      UUID.randomUUID());
+      UUID.randomUUID()
+    );
 
-    when(this.profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
+    when(this.profileRepository.findById(profileId))
+      .thenReturn(Optional.of(profile));
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
+    Assert.assertThrows(
+      BaseException.class,
+      () -> this.userServiceImpl.createUser(createUserDTO, userId)
+    );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -303,25 +340,31 @@ class CreateUserServiceImplTests {
   void itShouldNotBeCreatedNewUserWithProfileNonExists() {
     UUID companyId = UUID.randomUUID();
     UUID userId = UUID.randomUUID();
-   
+
     Company company = new Company("foo");
     company.setId(companyId);
 
     this.getLoggedUser();
     this.user.setId(userId);
-    
-    CreateUserDTO createUserDTO = new CreateUserDTO("foo.bar@example.com",
+
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "foo.bar@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       UUID.randomUUID(),
-      companyId);
+      companyId
+    );
 
-    when(this.companyRepository.findById(companyId)).thenReturn(Optional.of(company));
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
     when(userRepository.findById(userId)).thenReturn(Optional.of(this.user));
 
-    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
+    Assert.assertThrows(
+      BaseException.class,
+      () -> this.userServiceImpl.createUser(createUserDTO, userId)
+    );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
@@ -333,17 +376,21 @@ class CreateUserServiceImplTests {
 
     this.getLoggedUser();
     this.user.setId(userId);
-    
-    CreateUserDTO createUserDTO = new CreateUserDTO("bar.foo@example.com",
+
+    CreateUserDTO createUserDTO = new CreateUserDTO(
+      "bar.foo@example.com",
       "Foo",
       "Bar",
       "99999999",
       "12345678",
       profileId,
-      companyId);
+      companyId
+    );
 
-    Assert.assertThrows(BaseException.class, () -> this.userServiceImpl.createUser(createUserDTO, userId));
+    Assert.assertThrows(
+      BaseException.class,
+      () -> this.userServiceImpl.createUser(createUserDTO, userId)
+    );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 }
-

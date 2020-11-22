@@ -1,16 +1,16 @@
 package com.samuelbraga.rotinabackend.models;
 
 import com.samuelbraga.rotinabackend.enums.TypeUser;
+import java.util.UUID;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
-import java.util.UUID;
-
 @Entity
 @Data
 public class Profile implements GrantedAuthority {
+
   private static final long serialVersionUID = 2405172041950251807L;
 
   @Id
