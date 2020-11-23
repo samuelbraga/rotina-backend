@@ -11,8 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 @Data
 public class Profile implements GrantedAuthority {
 
-  private static final long serialVersionUID = 2405172041950251807L;
-
   @Id
   @GeneratedValue(generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")

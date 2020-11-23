@@ -15,8 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 public class User implements UserDetails {
 
-  private static final long serialVersionUID = 1905122041950251207L;
-
   @Id
   @GeneratedValue(generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -36,6 +34,9 @@ public class User implements UserDetails {
 
   @ManyToOne
   private Company company;
+
+  @ManyToOne
+  private Group group;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Profile> profiles = new ArrayList<>();

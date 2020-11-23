@@ -1,6 +1,6 @@
 package com.samuelbraga.rotinabackend.models;
 
-import java.io.Serializable;
+import com.samuelbraga.rotinabackend.dtos.group.CreateGroupDTO;
 import java.util.UUID;
 import javax.persistence.*;
 import lombok.Data;
@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Data
-public class Company {
+public class Group {
 
   @Id
   @GeneratedValue(generator = "uuid2")
@@ -19,12 +19,6 @@ public class Company {
   @Column(unique = true)
   private String name;
 
-  @OneToOne
-  private Image image;
-
-  public Company() {}
-
-  public Company(String name) {
-    this.name = name;
-  }
+  @ManyToOne
+  private Company company;
 }
