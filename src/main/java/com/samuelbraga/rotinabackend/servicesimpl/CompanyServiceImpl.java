@@ -50,7 +50,7 @@ public class CompanyServiceImpl implements CompanyService {
     if (!user.isSuperAdmin()) {
       throw new BaseException("User does not permission");
     }
-    
+
     Optional<Company> companyExists =
       this.companyRepository.findByName(createCompanyDTO.getName());
 
@@ -90,7 +90,7 @@ public class CompanyServiceImpl implements CompanyService {
     if (!user.isCompanyAuthorized(companyId)) {
       throw new BaseException("User does not permission");
     }
-    
+
     Company company = this.getCompany(companyId);
 
     Image image =

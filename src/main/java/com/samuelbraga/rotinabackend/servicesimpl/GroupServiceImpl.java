@@ -57,8 +57,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   private void checkNameGroup(String name, UUID companyId) {
-    Optional<Group> group =
-      this.groupRepository.findByName(name);
+    Optional<Group> group = this.groupRepository.findByName(name);
 
     if (group.isPresent()) {
       throw new BaseException("Group already exists in your company");

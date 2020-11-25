@@ -4,7 +4,6 @@ import static org.mockito.Mockito.*;
 
 import com.samuelbraga.rotinabackend.config.aws.s3.AmazonS3ImageService;
 import com.samuelbraga.rotinabackend.dtos.company.CompanyDTO;
-import com.samuelbraga.rotinabackend.dtos.company.CreateCompanyDTO;
 import com.samuelbraga.rotinabackend.enums.TypeUser;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.models.Company;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -52,28 +50,32 @@ class ListCompanyServiceImplTests {
   private static UUID userId = UUID.randomUUID();
 
   static {
-    company = Company.builder()
-      .id(UUID.randomUUID())
-      .name("foo")
-      .build();
+    company = Company.builder().id(UUID.randomUUID()).name("foo").build();
 
-    Profile profile = new Profile();
-    profile.setType(TypeUser.SUPER_ADMIN);
+    Profile profile = Profile.builder().type(TypeUser.SUPER_ADMIN).build();
     List<Profile> profiles = new ArrayList<>();
     profiles.add(profile);
 
-    user = User.builder()
-      .id(userId)
-      .email("foo.bar@example.com")
-      .company(company)
-      .profiles(profiles)
-      .build();
+    user =
+      User
+        .builder()
+        .id(userId)
+        .email("foo.bar@example.com")
+        .company(company)
+        .profiles(profiles)
+        .build();
   }
 
   @Before
   void init() {
     MockitoAnnotations.openMocks(this);
-    this.companyService = new CompanyServiceImpl(this.companyRepository, this.userRepository, this.modelMapper, this.amazonS3ImageService);
+    this.companyService =
+      new CompanyServiceImpl(
+        this.companyRepository,
+        this.userRepository,
+        this.modelMapper,
+        this.amazonS3ImageService
+      );
   }
 
   @Test
@@ -84,7 +86,8 @@ class ListCompanyServiceImplTests {
 
     CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
 
-    when(this.userRepository.findById(this.userId)).thenReturn(Optional.of(this.user));
+    when(this.userRepository.findById(this.userId))
+      .thenReturn(Optional.of(this.user));
     when(this.companyRepository.findAll()).thenReturn(listCompanies);
     when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
 
@@ -96,28 +99,29 @@ class ListCompanyServiceImplTests {
 
   @Test
   void itShouldNotBeListCompanies() {
-    Profile profile = new Profile();
-    profile.setType(TypeUser.ADMIN);
+    Profile profile = Profile.builder().type(TypeUser.ADMIN).build();
     List<Profile> profiles = new ArrayList<>();
     profiles.add(profile);
 
-    User adminUser = User.builder()
+    User adminUser = User
+      .builder()
       .id(this.userId)
       .email("foo.bar@example.com")
       .company(this.company)
       .profiles(profiles)
       .build();
-    
+
     List<Company> listCompanies = new ArrayList<>();
     listCompanies.add(new Company());
     listCompanies.add(new Company());
 
     CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
 
-    when(this.userRepository.findById(this.userId)).thenReturn(Optional.of(adminUser));
+    when(this.userRepository.findById(this.userId))
+      .thenReturn(Optional.of(adminUser));
     when(this.companyRepository.findAll()).thenReturn(listCompanies);
     when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
-    
+
     Assert.assertThrows(
       BaseException.class,
       () -> this.companyService.listCompanies(this.userId)

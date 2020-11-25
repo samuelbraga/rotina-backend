@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,7 +46,7 @@ public class User implements UserDetails {
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Profile> profiles = new ArrayList<>();
-  
+
   public User(CreateUserDTO createUserDTO) {
     this.email = createUserDTO.getEmail();
     this.name = createUserDTO.getName();
@@ -77,12 +76,9 @@ public class User implements UserDetails {
   }
 
   public boolean isCompanyAuthorized(UUID companyId) {
-    if (isSuperAdmin()) return true;
-    if (isAdmin() && this.company.getId() == companyId) return true;
-
-    return false;
+    return isSuperAdmin() || (isAdmin() && this.company.getId() == companyId);
   }
-  
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return profiles;

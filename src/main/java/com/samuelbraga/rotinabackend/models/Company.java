@@ -2,7 +2,6 @@ package com.samuelbraga.rotinabackend.models;
 
 import java.util.UUID;
 import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +26,7 @@ public class Company {
 
   @OneToOne
   private Image image;
-  
+
   public Company(String name) {
     this.name = name;
   }
