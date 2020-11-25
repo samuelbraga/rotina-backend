@@ -6,13 +6,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
 
   @Id
@@ -35,14 +42,12 @@ public class User implements UserDetails {
   @ManyToOne
   private Company company;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Group group;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Profile> profiles = new ArrayList<>();
-
-  public User() {}
-
+  
   public User(CreateUserDTO createUserDTO) {
     this.email = createUserDTO.getEmail();
     this.name = createUserDTO.getName();

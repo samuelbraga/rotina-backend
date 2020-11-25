@@ -6,5 +6,5 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GroupRepository extends JpaRepository<Group, UUID> {
-//  Optional<Group> findByNameAndCompany_Id(String name, UUID companyId);
+  Optional<Group> findByName(String name);
 }

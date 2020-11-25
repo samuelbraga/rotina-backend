@@ -12,17 +12,27 @@ import com.samuelbraga.rotinabackend.repositories.UserRepository;
 import com.samuelbraga.rotinabackend.servicesimpl.SessionServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -30,51 +40,39 @@ import org.springframework.test.context.ActiveProfiles;
 class CreateSessionServiceImplTest {
 
   @Mock
-  private final AuthenticationManager authenticationManager;
+  private AuthenticationManager authenticationManager;
 
   @Mock
-  private final TokenAuthenticationService tokenAuthenticationService;
+  private TokenAuthenticationService tokenAuthenticationService;
 
   @InjectMocks
-  private final SessionServiceImpl sessionServiceImpl;
+  private SessionServiceImpl sessionServiceImpl;
 
-  @InjectMocks
-  private final ProfileRepository profileRepository;
+  private static List<Profile> profiles = new ArrayList<>();
+  
+  private static UsernamePasswordAuthenticationToken userAuth;
+  
+  static {
+    Profile profile = new Profile();
+    profile.setType(TypeUser.SUPER_ADMIN);
+    profiles.add(profile);
 
-  @InjectMocks
-  private final UserRepository userRepository;
-
-  @Autowired
-  public CreateSessionServiceImplTest(
-    AuthenticationManager authenticationManager,
-    TokenAuthenticationService tokenAuthenticationService,
-    SessionServiceImpl sessionServiceImpl,
-    ProfileRepository profileRepository,
-    UserRepository userRepository
-  ) {
-    this.authenticationManager = authenticationManager;
-    this.tokenAuthenticationService = tokenAuthenticationService;
-    this.sessionServiceImpl = sessionServiceImpl;
-    this.profileRepository = profileRepository;
-    this.userRepository = userRepository;
+    userAuth = new UsernamePasswordAuthenticationToken(
+      "foo.bar@example.com",
+      "123456"
+    );
+  }  
+    
+  @Before
+  void init() {
+    MockitoAnnotations.openMocks(this);
+    sessionServiceImpl = new SessionServiceImpl(this.authenticationManager, this.tokenAuthenticationService);
   }
 
   @Test
   void itShouldBeCreatedNewUserSession() {
-    Profile profile = new Profile();
-    profile.setType(TypeUser.SUPER_ADMIN);
-    this.profileRepository.save(profile);
-
-    List<Profile> profiles = new ArrayList<>();
-    profiles.add(profile);
-
-    User user = new User();
-    user.setId(UUID.randomUUID());
-    user.setEmail("foo.bar@example.com");
-    user.setPassword(new BCryptPasswordEncoder().encode("123456"));
-    user.setProfiles(profiles);
-    this.userRepository.save(user);
-
+    when(this.authenticationManager.authenticate(userAuth)).thenReturn(userAuth);
+    
     CreateSessionDTO createSessionDTO = new CreateSessionDTO(
       "foo.bar@example.com",
       "123456"
@@ -87,20 +85,8 @@ class CreateSessionServiceImplTest {
 
   @Test
   void itShouldNotBeCreatedNewUserSession() {
-    Profile profile = new Profile();
-    profile.setType(TypeUser.SUPER_ADMIN);
-    this.profileRepository.save(profile);
-
-    List<Profile> profiles = new ArrayList<>();
-    profiles.add(profile);
-
-    User user = new User();
-    user.setId(UUID.randomUUID());
-    user.setEmail("bar.foo@example.com");
-    user.setPassword(new BCryptPasswordEncoder().encode("123456"));
-    user.setProfiles(profiles);
-    this.userRepository.save(user);
-
+    doThrow(BadCredentialsException.class).when(this.authenticationManager).authenticate(userAuth);
+    
     CreateSessionDTO createSessionDTO = new CreateSessionDTO(
       "bar.foo@example.com",
       "12345678"

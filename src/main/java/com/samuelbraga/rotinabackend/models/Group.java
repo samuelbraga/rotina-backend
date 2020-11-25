@@ -1,6 +1,5 @@
 package com.samuelbraga.rotinabackend.models;
 
-import com.samuelbraga.rotinabackend.dtos.group.CreateGroupDTO;
 import java.util.UUID;
 import javax.persistence.*;
 import lombok.Data;
@@ -19,6 +18,6 @@ public class Group {
   @Column(unique = true)
   private String name;
 
-  @ManyToOne
+  @ManyToOne()
   private Company company;
 }

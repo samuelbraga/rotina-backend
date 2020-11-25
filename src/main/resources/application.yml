@@ -6,6 +6,8 @@ spring:
     url: ${spring_datasource_url}
     username: ${spring_datasource_username}
     password: ${spring_datasource_password}
+  profiles:
+    active: ${spring_profile_active:"dev"}
   
   jpa:
     database-platform: "org.hibernate.dialect.MySQL8Dialect"
