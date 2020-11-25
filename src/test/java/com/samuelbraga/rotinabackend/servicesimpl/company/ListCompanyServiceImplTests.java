@@ -30,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CreateCompanyServiceImplTests {
+class ListCompanyServiceImplTests {
 
   @Mock
   private CompanyRepository companyRepository;
@@ -46,18 +46,16 @@ class CreateCompanyServiceImplTests {
 
   @InjectMocks
   private CompanyServiceImpl companyService;
-  
+
   private static User user;
   private static Company company;
-  private static CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO("foo");
-  private static UUID companyId = UUID.randomUUID();
   private static UUID userId = UUID.randomUUID();
-  
+
   static {
     company = Company.builder()
-                .id(companyId)
-                .name("foo")
-                .build();
+      .id(UUID.randomUUID())
+      .name("foo")
+      .build();
 
     Profile profile = new Profile();
     profile.setType(TypeUser.SUPER_ADMIN);
@@ -65,62 +63,44 @@ class CreateCompanyServiceImplTests {
     profiles.add(profile);
 
     user = User.builder()
-            .id(userId)
-            .email("foo.bar@example.com")
-            .company(company)
-            .profiles(profiles)
-            .build();
+      .id(userId)
+      .email("foo.bar@example.com")
+      .company(company)
+      .profiles(profiles)
+      .build();
   }
-  
+
   @Before
   void init() {
     MockitoAnnotations.openMocks(this);
     this.companyService = new CompanyServiceImpl(this.companyRepository, this.userRepository, this.modelMapper, this.amazonS3ImageService);
   }
-  
-  @Test
-  void itShouldBeCreatedNewCompany() {
-    CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
-    
-    when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
-    when(this.userRepository.findById(this.userId)).thenReturn(Optional.of(this.user));
 
-    CompanyDTO result =
-      this.companyService.createCompany(this.createCompanyDTO, userId);
+  @Test
+  void itShouldBeListCompanies() {
+    List<Company> listCompanies = new ArrayList<>();
+    listCompanies.add(new Company());
+    listCompanies.add(new Company());
+
+    CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
+
+    when(this.userRepository.findById(this.userId)).thenReturn(Optional.of(this.user));
+    when(this.companyRepository.findAll()).thenReturn(listCompanies);
+    when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
+
+    List<CompanyDTO> result = this.companyService.listCompanies(this.userId);
 
     Assert.assertNotNull(result);
-    Assert.assertEquals("foo", result.getName());
+    Assert.assertEquals(2, result.size());
   }
 
   @Test
-  void itShouldNotBeCreatedCompanyWithCompanyNameExists() {
-    when(this.userRepository.findById(this.userId)).thenReturn(Optional.of(this.user));
-    when(this.companyRepository.findByName(this.createCompanyDTO.getName()))
-      .thenReturn(Optional.of(this.company));
-
-    Assert.assertThrows(
-      BaseException.class,
-      () -> this.companyService.createCompany(this.createCompanyDTO, userId)
-    );
-    verify(this.companyRepository, never()).save(any(Company.class));
-  }
-
-  @Test
-  void itShouldNotBeCreatedCompanyWithNonExistsUser() {
-    Assert.assertThrows(
-      BaseException.class,
-      () -> this.companyService.createCompany(this.createCompanyDTO, UUID.randomUUID())
-    );
-    verify(this.companyRepository, never()).save(any(Company.class));
-  }
-
-  @Test
-  void itShouldNotBeCreatedCompanyWithUserNonAuthorized() {
+  void itShouldNotBeListCompanies() {
     Profile profile = new Profile();
     profile.setType(TypeUser.ADMIN);
     List<Profile> profiles = new ArrayList<>();
     profiles.add(profile);
-    
+
     User adminUser = User.builder()
       .id(this.userId)
       .email("foo.bar@example.com")
@@ -128,12 +108,20 @@ class CreateCompanyServiceImplTests {
       .profiles(profiles)
       .build();
     
-    when(this.userRepository.findById(this.userId)).thenReturn(Optional.of(adminUser));
+    List<Company> listCompanies = new ArrayList<>();
+    listCompanies.add(new Company());
+    listCompanies.add(new Company());
 
+    CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
+
+    when(this.userRepository.findById(this.userId)).thenReturn(Optional.of(adminUser));
+    when(this.companyRepository.findAll()).thenReturn(listCompanies);
+    when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
+    
     Assert.assertThrows(
       BaseException.class,
-      () -> this.companyService.createCompany(this.createCompanyDTO, this.userId)
+      () -> this.companyService.listCompanies(this.userId)
     );
-    verify(this.companyRepository, never()).save(any(Company.class));
+    verify(this.companyRepository, never()).findAll();
   }
 }

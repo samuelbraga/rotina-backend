@@ -16,7 +16,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,12 +41,15 @@ public class CompanyServiceImpl implements CompanyService {
   }
 
   @Override
-  @PreAuthorize("hasRole(ROLE_SUPER_ADMIN)")
   public CompanyDTO createCompany(
     CreateCompanyDTO createCompanyDTO,
     UUID userId
   ) {
     User user = this.getUser(userId);
+
+    if (!user.isSuperAdmin()) {
+      throw new BaseException("User does not permission");
+    }
     
     Optional<Company> companyExists =
       this.companyRepository.findByName(createCompanyDTO.getName());
@@ -85,14 +87,10 @@ public class CompanyServiceImpl implements CompanyService {
   ) {
     User user = this.getUser(userId);
 
-    if (!user.isSuperAdmin()) {
+    if (!user.isCompanyAuthorized(companyId)) {
       throw new BaseException("User does not permission");
     }
-
-    if (!user.isAdmin() && user.getCompany().getId() == companyId) {
-      throw new BaseException("User does not permission");
-    }
-
+    
     Company company = this.getCompany(companyId);
 
     Image image =

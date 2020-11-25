@@ -76,6 +76,13 @@ public class User implements UserDetails {
     return false;
   }
 
+  public boolean isCompanyAuthorized(UUID companyId) {
+    if (isSuperAdmin()) return true;
+    if (isAdmin() && this.company.getId() == companyId) return true;
+
+    return false;
+  }
+  
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return profiles;
