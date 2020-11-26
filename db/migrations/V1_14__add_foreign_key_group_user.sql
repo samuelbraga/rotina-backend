@@ -1,2 +1,2 @@
 ALTER TABLE `user`
-ADD FOREIGN KEY (group_id) REFERENCES `group`(id);
+ADD FOREIGN KEY (group_id) REFERENCES groups(id);

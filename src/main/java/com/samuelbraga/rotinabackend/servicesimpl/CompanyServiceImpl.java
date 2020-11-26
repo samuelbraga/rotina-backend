@@ -87,7 +87,7 @@ public class CompanyServiceImpl implements CompanyService {
   ) {
     User user = this.getUser(userId);
 
-    if (!user.isCompanyAuthorized(companyId)) {
+    if (user.isCompanyAuthorized(companyId)) {
       throw new BaseException("User does not permission");
     }
 

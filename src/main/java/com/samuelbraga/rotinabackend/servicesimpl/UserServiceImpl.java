@@ -45,7 +45,12 @@ public class UserServiceImpl
 
   @Override
   public UserDTO createUser(CreateUserDTO createUserDTO, UUID userId) {
-    this.verifyUserIsAuthorized(userId, createUserDTO.getCompanyId());
+    User user = this.getUser(userId);
+
+    if (user.isCompanyAuthorized(createUserDTO.getCompanyId())) {
+      throw new BaseException("User does not permission");
+    }
+
     this.verifyUserEmailExist(createUserDTO.getEmail());
 
     Company company = this.findCompany(createUserDTO.getCompanyId());
@@ -54,13 +59,13 @@ public class UserServiceImpl
     String hashedPassword = hashPassword(createUserDTO.getPassword());
     createUserDTO.setPassword(hashedPassword);
 
-    User user = new User(createUserDTO);
+    User newUser = new User(createUserDTO);
     user.setCompany(company);
     user.setProfiles(profiles);
 
-    this.userRepository.save(user);
+    this.userRepository.save(newUser);
 
-    return this.modelMapper.map(user, UserDTO.class);
+    return this.modelMapper.map(newUser, UserDTO.class);
   }
 
   private String hashPassword(String password) {
@@ -100,19 +105,5 @@ public class UserServiceImpl
     user.orElseThrow(() -> new BaseException("User does not exists"));
 
     return user.get();
-  }
-
-  private void verifyUserIsAuthorized(UUID userId, UUID companyId) {
-    User user = this.getUser(userId);
-
-    if (user.isSuperAdmin()) {
-      return;
-    }
-
-    if (user.isAdmin() && user.getCompany().getId() == companyId) {
-      return;
-    }
-
-    throw new BaseException("User does not permission");
   }
 }

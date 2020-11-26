@@ -114,10 +114,11 @@ class CreateCompanyServiceImplTests {
 
   @Test
   void itShouldNotBeCreatedCompanyWithNonExistsUser() {
+    UUID userID = UUID.randomUUID();
+
     Assert.assertThrows(
       BaseException.class,
-      () ->
-        this.companyService.createCompany(createCompanyDTO, UUID.randomUUID())
+      () -> this.companyService.createCompany(createCompanyDTO, userID)
     );
     verify(this.companyRepository, never()).save(any(Company.class));
   }

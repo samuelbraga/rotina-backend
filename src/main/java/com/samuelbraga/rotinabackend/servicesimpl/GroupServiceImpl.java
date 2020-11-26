@@ -4,7 +4,7 @@ import com.samuelbraga.rotinabackend.dtos.group.CreateGroupDTO;
 import com.samuelbraga.rotinabackend.dtos.group.GroupDTO;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.models.Company;
-import com.samuelbraga.rotinabackend.models.Group;
+import com.samuelbraga.rotinabackend.models.Groups;
 import com.samuelbraga.rotinabackend.models.User;
 import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.repositories.GroupRepository;
@@ -39,32 +39,34 @@ public class GroupServiceImpl implements GroupService {
 
   @Override
   public GroupDTO createGroup(CreateGroupDTO createGroupDTO, UUID userId) {
-    this.verifyUserIsAuthorized(userId, createGroupDTO.getCompanyId());
-    this.checkNameGroup(
-        createGroupDTO.getName(),
-        createGroupDTO.getCompanyId()
-      );
+    User user = this.getUser(userId);
 
-    Company company = this.findCompany(createGroupDTO.getCompanyId());
+    if (user.isCompanyAuthorized(createGroupDTO.getCompanyId())) {
+      throw new BaseException("User does not permission");
+    }
 
-    Group group = new Group();
-    group.setName(createGroupDTO.getName());
-    group.setCompany(company);
+    this.checkNameGroup(createGroupDTO.getName());
 
-    this.groupRepository.save(group);
+    Company company = this.getCompany(createGroupDTO.getCompanyId());
 
-    return this.modelMapper.map(group, GroupDTO.class);
+    Groups groups = new Groups();
+    groups.setName(createGroupDTO.getName());
+    groups.setCompany(company);
+
+    this.groupRepository.save(groups);
+
+    return this.modelMapper.map(groups, GroupDTO.class);
   }
 
-  private void checkNameGroup(String name, UUID companyId) {
-    Optional<Group> group = this.groupRepository.findByName(name);
+  private void checkNameGroup(String name) {
+    Optional<Groups> group = this.groupRepository.findByName(name);
 
     if (group.isPresent()) {
       throw new BaseException("Group already exists in your company");
     }
   }
 
-  private Company findCompany(UUID companyId) {
+  private Company getCompany(UUID companyId) {
     Optional<Company> company = this.companyRepository.findById(companyId);
 
     company.orElseThrow(() -> new BaseException("Company does not exists"));
@@ -78,19 +80,5 @@ public class GroupServiceImpl implements GroupService {
     user.orElseThrow(() -> new BaseException("User does not exists"));
 
     return user.get();
-  }
-
-  private void verifyUserIsAuthorized(UUID userId, UUID companyId) {
-    User user = this.getUser(userId);
-
-    if (user.isSuperAdmin()) {
-      return;
-    }
-
-    if (user.isAdmin() && user.getCompany().getId() == companyId) {
-      return;
-    }
-
-    throw new BaseException("User does not permission");
   }
 }

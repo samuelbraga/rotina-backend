@@ -42,7 +42,7 @@ public class User implements UserDetails {
   private Company company;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Group group;
+  private Groups groups;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Profile> profiles = new ArrayList<>();
@@ -76,7 +76,7 @@ public class User implements UserDetails {
   }
 
   public boolean isCompanyAuthorized(UUID companyId) {
-    return isSuperAdmin() || (isAdmin() && this.company.getId() == companyId);
+    return !isSuperAdmin() && (!isAdmin() || this.company.getId() != companyId);
   }
 
   @Override
