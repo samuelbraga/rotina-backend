@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `groups` (
+CREATE TABLE IF NOT EXISTS `arrangement` (
     `id` BINARY(16) NOT NULL PRIMARY KEY,
     `company_id` BINARY(16) NOT NULL,
     `name` varchar(255) NOT NULL,

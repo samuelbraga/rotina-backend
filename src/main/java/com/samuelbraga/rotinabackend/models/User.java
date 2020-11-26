@@ -42,7 +42,7 @@ public class User implements UserDetails {
   private Company company;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Groups groups;
+  private Arrangement arrangement;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Profile> profiles = new ArrayList<>();

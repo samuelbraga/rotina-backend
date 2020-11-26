@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Groups {
+public class Arrangement {
 
   @Id
   @GeneratedValue(generator = "uuid2")

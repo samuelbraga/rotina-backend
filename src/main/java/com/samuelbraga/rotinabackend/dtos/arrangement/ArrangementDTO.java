@@ -1,4 +1,4 @@
-package com.samuelbraga.rotinabackend.dtos.group;
+package com.samuelbraga.rotinabackend.dtos.arrangement;
 
 import com.samuelbraga.rotinabackend.models.Company;
 import java.util.UUID;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupDTO {
+public class ArrangementDTO {
 
   private UUID id;
   private String name;

@@ -1,6 +1,5 @@
-package com.samuelbraga.rotinabackend.dtos.group;
+package com.samuelbraga.rotinabackend.dtos.arrangement;
 
-import java.util.UUID;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,12 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateGroupDTO {
+public class CreateArrangementDTO {
 
   @NotNull
   @NotEmpty
   private String name;
-
-  @NotNull
-  private UUID companyId;
 }
