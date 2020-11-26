@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/profiles")
 public class ProfileController {
 
-  private ProfileService profileService;
+  private final ProfileService profileService;
 
   @Autowired
   public ProfileController(ProfileService profileService) {

@@ -82,7 +82,11 @@ public class AmazonS3ImageService extends AmazonS3ClientService {
 
       uploadPublicFile(fileName, file);
 
-      file.delete();
+      boolean delete = file.delete();
+
+      if (!delete) {
+        throw new BaseException("Current error on delete file");
+      }
 
       fileUrl = getUrl().concat(fileName);
     } catch (IOException e) {

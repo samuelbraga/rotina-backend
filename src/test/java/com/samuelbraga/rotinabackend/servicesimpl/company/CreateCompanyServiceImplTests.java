@@ -18,16 +18,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 @ActiveProfiles("test")
 class CreateCompanyServiceImplTests {
 
@@ -46,13 +48,13 @@ class CreateCompanyServiceImplTests {
   @InjectMocks
   private CompanyServiceImpl companyService;
 
-  private static User user;
-  private static Company company;
-  private static CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO(
+  private static final User user;
+  private static final Company company;
+  private static final CreateCompanyDTO createCompanyDTO = new CreateCompanyDTO(
     "foo"
   );
-  private static UUID companyId = UUID.randomUUID();
-  private static UUID userId = UUID.randomUUID();
+  private static final UUID companyId = UUID.randomUUID();
+  private static final UUID userId = UUID.randomUUID();
 
   static {
     company = Company.builder().id(companyId).name("foo").build();
@@ -71,7 +73,7 @@ class CreateCompanyServiceImplTests {
         .build();
   }
 
-  @Before
+  @BeforeEach
   void init() {
     MockitoAnnotations.openMocks(this);
     this.companyService =
@@ -88,11 +90,10 @@ class CreateCompanyServiceImplTests {
     CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
 
     when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
-    when(this.userRepository.findById(this.userId))
-      .thenReturn(Optional.of(this.user));
+    when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
 
     CompanyDTO result =
-      this.companyService.createCompany(this.createCompanyDTO, userId);
+      this.companyService.createCompany(createCompanyDTO, userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals("foo", result.getName());
@@ -100,14 +101,13 @@ class CreateCompanyServiceImplTests {
 
   @Test
   void itShouldNotBeCreatedCompanyWithCompanyNameExists() {
-    when(this.userRepository.findById(this.userId))
-      .thenReturn(Optional.of(this.user));
-    when(this.companyRepository.findByName(this.createCompanyDTO.getName()))
-      .thenReturn(Optional.of(this.company));
+    when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(this.companyRepository.findByName(createCompanyDTO.getName()))
+      .thenReturn(Optional.of(company));
 
     Assert.assertThrows(
       BaseException.class,
-      () -> this.companyService.createCompany(this.createCompanyDTO, userId)
+      () -> this.companyService.createCompany(createCompanyDTO, userId)
     );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
@@ -117,10 +117,7 @@ class CreateCompanyServiceImplTests {
     Assert.assertThrows(
       BaseException.class,
       () ->
-        this.companyService.createCompany(
-            this.createCompanyDTO,
-            UUID.randomUUID()
-          )
+        this.companyService.createCompany(createCompanyDTO, UUID.randomUUID())
     );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
@@ -133,19 +130,18 @@ class CreateCompanyServiceImplTests {
 
     User adminUser = User
       .builder()
-      .id(this.userId)
+      .id(userId)
       .email("foo.bar@example.com")
-      .company(this.company)
+      .company(company)
       .profiles(profiles)
       .build();
 
-    when(this.userRepository.findById(this.userId))
+    when(this.userRepository.findById(userId))
       .thenReturn(Optional.of(adminUser));
 
     Assert.assertThrows(
       BaseException.class,
-      () ->
-        this.companyService.createCompany(this.createCompanyDTO, this.userId)
+      () -> this.companyService.createCompany(createCompanyDTO, userId)
     );
     verify(this.companyRepository, never()).save(any(Company.class));
   }

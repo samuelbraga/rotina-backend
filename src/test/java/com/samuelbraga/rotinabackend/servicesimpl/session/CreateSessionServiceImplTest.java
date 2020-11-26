@@ -6,18 +6,15 @@ import static org.mockito.Mockito.when;
 import com.samuelbraga.rotinabackend.config.security.TokenAuthenticationService;
 import com.samuelbraga.rotinabackend.dtos.session.CreateSessionDTO;
 import com.samuelbraga.rotinabackend.dtos.session.TokenDTO;
-import com.samuelbraga.rotinabackend.enums.TypeUser;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
-import com.samuelbraga.rotinabackend.models.Profile;
 import com.samuelbraga.rotinabackend.servicesimpl.SessionServiceImpl;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 @ActiveProfiles("test")
 class CreateSessionServiceImplTest {
 
@@ -37,20 +35,14 @@ class CreateSessionServiceImplTest {
   @InjectMocks
   private SessionServiceImpl sessionServiceImpl;
 
-  private static List<Profile> profiles = new ArrayList<>();
-
-  private static UsernamePasswordAuthenticationToken userAuth;
+  private static final UsernamePasswordAuthenticationToken userAuth;
 
   static {
-    Profile profile = new Profile();
-    profile.setType(TypeUser.SUPER_ADMIN);
-    profiles.add(profile);
-
     userAuth =
       new UsernamePasswordAuthenticationToken("foo.bar@example.com", "123456");
   }
 
-  @Before
+  @BeforeEach
   void init() {
     MockitoAnnotations.openMocks(this);
     this.sessionServiceImpl =

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProfileServiceImpl implements ProfileService {
 
-  private ProfileRepository profileRepository;
+  private final ProfileRepository profileRepository;
   private final UserRepository userRepository;
   private final ModelMapper modelMapper;
 

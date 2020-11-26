@@ -4,10 +4,16 @@ import java.util.UUID;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateUserDTO {
 
   @NotNull
@@ -37,24 +43,4 @@ public class CreateUserDTO {
 
   @NotNull
   private UUID companyId;
-
-  public CreateUserDTO() {}
-
-  public CreateUserDTO(
-    @NotNull @NotEmpty @Email String email,
-    @NotNull @NotEmpty String name,
-    @NotNull @NotEmpty String lastName,
-    @NotNull @NotEmpty String phone,
-    @NotNull @NotEmpty @Length String password,
-    @NotNull UUID profileId,
-    @NotNull UUID companyId
-  ) {
-    this.email = email;
-    this.name = name;
-    this.lastName = lastName;
-    this.phone = phone;
-    this.password = password;
-    this.profileId = profileId;
-    this.companyId = companyId;
-  }
 }

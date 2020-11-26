@@ -17,16 +17,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 @ActiveProfiles("test")
 class ListCompanyServiceImplTests {
 
@@ -45,9 +47,9 @@ class ListCompanyServiceImplTests {
   @InjectMocks
   private CompanyServiceImpl companyService;
 
-  private static User user;
-  private static Company company;
-  private static UUID userId = UUID.randomUUID();
+  private static final User user;
+  private static final Company company;
+  private static final UUID userId = UUID.randomUUID();
 
   static {
     company = Company.builder().id(UUID.randomUUID()).name("foo").build();
@@ -66,7 +68,7 @@ class ListCompanyServiceImplTests {
         .build();
   }
 
-  @Before
+  @BeforeEach
   void init() {
     MockitoAnnotations.openMocks(this);
     this.companyService =
@@ -86,12 +88,11 @@ class ListCompanyServiceImplTests {
 
     CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
 
-    when(this.userRepository.findById(this.userId))
-      .thenReturn(Optional.of(this.user));
+    when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
     when(this.companyRepository.findAll()).thenReturn(listCompanies);
     when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
 
-    List<CompanyDTO> result = this.companyService.listCompanies(this.userId);
+    List<CompanyDTO> result = this.companyService.listCompanies(userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals(2, result.size());
@@ -105,9 +106,9 @@ class ListCompanyServiceImplTests {
 
     User adminUser = User
       .builder()
-      .id(this.userId)
+      .id(userId)
       .email("foo.bar@example.com")
-      .company(this.company)
+      .company(company)
       .profiles(profiles)
       .build();
 
@@ -117,14 +118,14 @@ class ListCompanyServiceImplTests {
 
     CompanyDTO companyDTO = CompanyDTO.builder().name("foo").build();
 
-    when(this.userRepository.findById(this.userId))
+    when(this.userRepository.findById(userId))
       .thenReturn(Optional.of(adminUser));
     when(this.companyRepository.findAll()).thenReturn(listCompanies);
     when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
 
     Assert.assertThrows(
       BaseException.class,
-      () -> this.companyService.listCompanies(this.userId)
+      () -> this.companyService.listCompanies(userId)
     );
     verify(this.companyRepository, never()).findAll();
   }

@@ -1,5 +1,7 @@
 package com.samuelbraga.rotinabackend.servicesimpl.company;
 
+import static org.mockito.Mockito.*;
+
 import com.samuelbraga.rotinabackend.config.aws.s3.AmazonS3ImageService;
 import com.samuelbraga.rotinabackend.dtos.company.CompanyDTO;
 import com.samuelbraga.rotinabackend.enums.TypeUser;
@@ -11,32 +13,27 @@ import com.samuelbraga.rotinabackend.models.User;
 import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
 import com.samuelbraga.rotinabackend.servicesimpl.CompanyServiceImpl;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 @SpringBootTest
+@AutoConfigureTestDatabase
 @ActiveProfiles("test")
-public class UpdateLogoCompanyServiceImplTests {
+class UpdateLogoCompanyServiceImplTests {
 
   @Mock
   private CompanyRepository companyRepository;
@@ -53,13 +50,13 @@ public class UpdateLogoCompanyServiceImplTests {
   @InjectMocks
   private CompanyServiceImpl companyService;
 
-  private static User user;
-  private static Company company;
-  private static Image image;
-  private static CompanyDTO companyDTO;
-  private static UUID companyId = UUID.randomUUID();
-  private static UUID userId = UUID.randomUUID();
-  private static MockMultipartFile file;
+  private static final User user;
+  private static final Company company;
+  private static final Image image;
+  private static final CompanyDTO companyDTO;
+  private static final UUID companyId = UUID.randomUUID();
+  private static final UUID userId = UUID.randomUUID();
+  private static final MockMultipartFile file;
 
   static {
     company = Company.builder().id(companyId).name("foo").build();
@@ -77,27 +74,22 @@ public class UpdateLogoCompanyServiceImplTests {
         .profiles(profiles)
         .build();
 
-    image = Image.builder()
-      .id(UUID.randomUUID())
-      .image_url("image_url")
-      .build();
+    image =
+      Image.builder().id(UUID.randomUUID()).image_url("image_url").build();
 
-    companyDTO = CompanyDTO.builder()
-      .id(companyId)
-      .name("foo")
-      .image(image)
-      .build();
+    companyDTO =
+      CompanyDTO.builder().id(companyId).name("foo").image(image).build();
 
-    file
-      = new MockMultipartFile(
-      "file",
-      "test.jpg",
-      MediaType.TEXT_PLAIN_VALUE,
-      "Test".getBytes()
-    );
+    file =
+      new MockMultipartFile(
+        "file",
+        "test.jpg",
+        MediaType.TEXT_PLAIN_VALUE,
+        "Test".getBytes()
+      );
   }
 
-  @Before
+  @BeforeEach
   void init() {
     MockitoAnnotations.openMocks(this);
     this.companyService =
@@ -111,16 +103,14 @@ public class UpdateLogoCompanyServiceImplTests {
 
   @Test
   void itShouldBeUpdateLogCompany() {
-    when(this.userRepository.findById(this.userId))
-      .thenReturn(Optional.of(this.user));
-    when(this.companyRepository.findById(this.companyId))
-      .thenReturn(Optional.of(this.company));
-    when(this.amazonS3ImageService.insertImages(file, this.companyId, "companies/"))
-      .thenReturn(this.image);
-    when(this.modelMapper.map(any(), any())).thenReturn(this.companyDTO);
-        
-    CompanyDTO result =
-      this.companyService.updateLogo(file, this.companyId, this.userId);
+    when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
+    when(this.amazonS3ImageService.insertImages(file, companyId, "companies/"))
+      .thenReturn(image);
+    when(this.modelMapper.map(any(), any())).thenReturn(companyDTO);
+
+    CompanyDTO result = this.companyService.updateLogo(file, companyId, userId);
 
     Assert.assertNotNull(result);
     Assert.assertEquals(image, result.getImage());
@@ -128,25 +118,28 @@ public class UpdateLogoCompanyServiceImplTests {
 
   @Test
   void itShouldNotBeUpdateLogCompanyWithInvalidArchive() {
-    MockMultipartFile fileIncorrect
-      = new MockMultipartFile(
+    MockMultipartFile fileIncorrect = new MockMultipartFile(
       "file",
       "test.jpg",
       MediaType.TEXT_PLAIN_VALUE,
       "Test".getBytes()
     );
-    
-    when(this.userRepository.findById(this.userId))
-      .thenReturn(Optional.of(this.user));
-    when(this.companyRepository.findById(this.companyId))
-      .thenReturn(Optional.of(this.company));
-    when(this.amazonS3ImageService.insertImages(fileIncorrect, this.companyId, "companies/"))
+
+    when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(this.companyRepository.findById(companyId))
+      .thenReturn(Optional.of(company));
+    when(
+      this.amazonS3ImageService.insertImages(
+          fileIncorrect,
+          companyId,
+          "companies/"
+        )
+    )
       .thenThrow(new BaseException("Image invalid format"));
-    
+
     Assert.assertThrows(
       BaseException.class,
-      () ->
-        this.companyService.updateLogo(fileIncorrect, this.companyId, this.userId)
+      () -> this.companyService.updateLogo(fileIncorrect, companyId, userId)
     );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
@@ -157,37 +150,33 @@ public class UpdateLogoCompanyServiceImplTests {
     List<Profile> profiles = new ArrayList<>();
     profiles.add(profile);
 
-    User adminUser =
-      User
-        .builder()
-        .id(userId)
-        .email("foo.bar@example.com")
-        .company(company)
-        .profiles(profiles)
-        .build();
-    
-    when(this.userRepository.findById(this.userId))
+    User adminUser = User
+      .builder()
+      .id(userId)
+      .email("foo.bar@example.com")
+      .company(company)
+      .profiles(profiles)
+      .build();
+
+    when(this.userRepository.findById(userId))
       .thenReturn(Optional.of(adminUser));
 
     Assert.assertThrows(
       BaseException.class,
-      () ->
-        this.companyService.updateLogo(file, this.companyId, this.userId)
+      () -> this.companyService.updateLogo(file, companyId, userId)
     );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
 
   @Test
   void itShouldNotBeUpdateLogCompanyWithNonExistsCompany() {
-    when(this.userRepository.findById(this.userId))
-      .thenReturn(Optional.of(this.user));
-    when(this.companyRepository.findById(this.companyId))
+    when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(this.companyRepository.findById(companyId))
       .thenReturn(Optional.empty());
 
     Assert.assertThrows(
       BaseException.class,
-      () ->
-        this.companyService.updateLogo(file, this.companyId, this.userId)
+      () -> this.companyService.updateLogo(file, companyId, userId)
     );
     verify(this.companyRepository, never()).save(any(Company.class));
   }
