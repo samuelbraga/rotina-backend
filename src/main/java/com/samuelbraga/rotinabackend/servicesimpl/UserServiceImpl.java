@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +69,17 @@ public class UserServiceImpl
     this.userRepository.save(newUser);
 
     return this.modelMapper.map(newUser, UserDTO.class);
+  }
+  
+  @Override
+  public List<UserDTO> listUsers(UUID userId) {
+    if (this.getUser(userId).isSuperAdmin()) {
+      throw new BaseException("User does not permission");
+    }
+    
+    List<User> users = this.userRepository.findAll();
+    
+    return users.stream().map(user -> this.modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
   }
 
   private String hashPassword(String password) {

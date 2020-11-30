@@ -2,6 +2,8 @@ package com.samuelbraga.rotinabackend.dtos.user;
 
 import com.samuelbraga.rotinabackend.models.Company;
 import java.util.UUID;
+
+import com.samuelbraga.rotinabackend.models.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +20,6 @@ public class UserDTO {
   private String name;
   private String lastName;
   private String phone;
+  private Profile profile;
   private Company company;
 }

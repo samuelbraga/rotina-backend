@@ -2,6 +2,7 @@ package com.samuelbraga.rotinabackend.servicesimpl;
 
 import com.samuelbraga.rotinabackend.dtos.arrangement.ArrangementDTO;
 import com.samuelbraga.rotinabackend.dtos.arrangement.CreateArrangementDTO;
+import com.samuelbraga.rotinabackend.dtos.user.UserDTO;
 import com.samuelbraga.rotinabackend.exceptions.BaseException;
 import com.samuelbraga.rotinabackend.models.Arrangement;
 import com.samuelbraga.rotinabackend.models.Company;
@@ -10,6 +11,8 @@ import com.samuelbraga.rotinabackend.repositories.ArrangementRepository;
 import com.samuelbraga.rotinabackend.repositories.CompanyRepository;
 import com.samuelbraga.rotinabackend.repositories.UserRepository;
 import com.samuelbraga.rotinabackend.services.ArrangementService;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,18 +45,17 @@ public class ArrangementServiceImpl implements ArrangementService {
   @Override
   public ArrangementDTO createGroup(
     CreateArrangementDTO createArrangementDTO,
-    UUID userId,
-    UUID companyId
+    UUID userId
   ) {
     User user = this.getUser(userId);
 
-    if (user.isCompanyAuthorized(companyId)) {
+    if (user.isCompanyAuthorized(createArrangementDTO.getCompanyId())) {
       throw new BaseException("User does not permission");
     }
 
-    this.checkNameGroupExists(createArrangementDTO.getName(), companyId);
+    this.checkNameGroupExists(createArrangementDTO.getName(), createArrangementDTO.getCompanyId());
 
-    Company company = this.getCompany(companyId);
+    Company company = this.getCompany(createArrangementDTO.getCompanyId());
 
     Arrangement arrangement = Arrangement
       .builder()
@@ -67,7 +69,7 @@ public class ArrangementServiceImpl implements ArrangementService {
   }
 
   @Override
-  public List<ArrangementDTO> listGroups(UUID userId, UUID companyId) {
+  public List<ArrangementDTO> listGroupsByCompany(UUID userId, UUID companyId) {
     User user = this.getUser(userId);
 
     if (user.isCompanyAuthorized(companyId)) {
@@ -85,12 +87,18 @@ public class ArrangementServiceImpl implements ArrangementService {
       .collect(Collectors.toList());
   }
 
+  @Override
+  public List<UserDTO> linkGroupsToUsers(UUID userId, UUID companyId, List<UUID> usersId) {
+    List<UserDTO> userDTOList = new ArrayList<>();
+    return userDTOList;
+  }
+  
   private void checkNameGroupExists(String name, UUID companyId) {
     Optional<Arrangement> group =
       this.arrangementRepository.findByNameAndCompany_Id(name, companyId);
 
     if (group.isPresent()) {
-      throw new BaseException("Group already exists in your company");
+      throw new BaseException("Arrangement already exists in your company");
     }
   }
 
